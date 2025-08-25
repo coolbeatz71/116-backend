@@ -19,7 +19,7 @@ RESULT=$?
 
 if [ $RESULT -ne 0 ]; then
     echo "${YELLOW}⚠️  dotnet-format is not installed${NC}"
-    printf "${YELLOW}💡 Would you like to install dotnet-format now? (y/n): ${NC}"
+    printf "%s💡 Would you like to install dotnet-format now? (y/n): %s" "${YELLOW}" "${NC}"
     read -r choice
 
     case "$choice" in
