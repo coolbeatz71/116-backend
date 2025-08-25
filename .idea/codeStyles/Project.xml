@@ -1,0 +1,138 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <option name="LINE_SEPARATOR" value="&#10;" />
+    <option name="RIGHT_MARGIN" value="120" />
+    <CSharpCodeStyleSettings>
+      <option name="NAMESPACE_DECLARATIONS" value="0" />
+      <option name="PREFER_SEPARATE_DECONSTRUCTED_VARIABLES_DECLARATION" value="true" />
+      <option name="PREFER_EXPLICIT_DISCARD_DECLARATION" value="false" />
+      <option name="ALIGN_MULTILINE_CALLS_CHAIN" value="true" />
+      <option name="ALIGN_MULTILINE_EXTENDS_LIST" value="true" />
+      <option name="ALIGN_MULTILINE_FOR_STMT" value="true" />
+      <option name="ALIGN_MULTIPLE_DECLARATION" value="true" />
+      <option name="ALIGN_MULTLINE_TYPE_PARAMETER_LIST" value="true" />
+      <option name="ALIGN_MULTLINE_TYPE_PARAMETER_CONSTRAINS" value="true" />
+      <option name="SPACE_AROUND_DECLARATION_STATEMENTS" value="false" />
+      <option name="SPACE_AROUND_MULTIPLICATIVE" value="true" />
+      <option name="SPACE_AROUND_SHIFT" value="true" />
+      <option name="SPACE_AROUND_RELATIONAL" value="true" />
+      <option name="SPACE_AROUND_EQUALITY" value="true" />
+      <option name="SPACE_AROUND_LOGICAL" value="true" />
+      <option name="SPACE_AROUND_NULLCOALESCING" value="true" />
+      <option name="SPACE_AROUND_ARROW" value="true" />
+      <option name="SPACE_AFTER_COMMA" value="true" />
+      <option name="SPACE_AFTER_COMMA_IN_TYPE_ARGUMENTS" value="true" />
+      <option name="SPACE_BEFORE_COMMA" value="false" />
+      <option name="SPACE_AROUND_DOT" value="false" />
+      <option name="SPACE_AROUND_LAMBDA_ARROW" value="true" />
+      <option name="SPACE_BEFORE_SEMICOLON" value="false" />
+      <option name="SPACE_AFTER_SEMICOLON" value="true" />
+      <option name="SPACE_WITHIN_SINGLE_LINE_ARRAY_INITIALIZER_BRACES" value="true" />
+      <option name="SPACE_BEFORE_ATTRIBUTE_TARGET_COLON" value="false" />
+      <option name="SPACE_AFTER_ATTRIBUTE_TARGET_COLON" value="true" />
+      <option name="SPACE_BEFORE_COLON_IN_CASE" value="false" />
+      <option name="SPACE_AFTER_COLON_IN_CASE" value="true" />
+      <option name="SPACE_BEFORE_TYPE_PARAMETER_ANGLE" value="false" />
+      <option name="SPACE_BEFORE_TYPE_ARGUMENT_ANGLE" value="false" />
+      <option name="SPACE_WITHIN_TYPE_PARAMETER_ANGLES" value="false" />
+      <option name="SPACE_WITHIN_TYPE_ARGUMENT_ANGLES" value="false" />
+      <option name="SPACE_BEFORE_SINGLELINE_ACCESSORHOLDER" value="true" />
+      <option name="SPACE_IN_SINGLELINE_ACCESSORHOLDER" value="true" />
+      <option name="SPACE_BETWEEN_ACCESSORS_IN_SINGLELINE_PROPERTY" value="true" />
+      <option name="SPACE_WITHIN_EMPTY_BRACES" value="true" />
+      <option name="SPACE_IN_SINGLELINE_METHOD" value="true" />
+      <option name="SPACE_IN_SINGLELINE_ANONYMOUS_METHOD" value="true" />
+      <option name="SPACE_WITHIN_ATTRIBUTE_BRACKETS" value="false" />
+      <option name="SPACE_BETWEEN_ATTRIBUTE_SECTIONS" value="true" />
+      <option name="SPACE_AFTER_ATTRIBUTES" value="true" />
+      <option name="STICK_COMMENT" value="false" />
+      <option name="FORCE_IFELSE_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="FORCE_FOR_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="FORCE_FOREACH_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="FORCE_WHILE_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="FORCE_USING_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="FORCE_FIXED_BRACES_STYLE" value="ALWAYS_ADD" />
+      <option name="INDENT_NESTED_USINGS_STMT" value="true" />
+      <option name="INDENT_NESTED_FIXED_STMT" value="true" />
+      <option name="INDENT_NESTED_LOCK_STMT" value="true" />
+      <option name="INDENT_NESTED_FOR_STMT" value="true" />
+      <option name="INDENT_NESTED_FOREACH_STMT" value="true" />
+      <option name="INDENT_NESTED_WHILE_STMT" value="true" />
+      <option name="INDENT_TYPE_CONSTRAINTS" value="true" />
+      <option name="INDENT_CASE_FROM_SWITCH" value="true" />
+      <option name="INDENT_BREAK_FROM_CASE" value="true" />
+      <option name="BLANK_LINES_AROUND_SINGLE_LINE_FIELD" value="0" />
+      <option name="BLANK_LINES_AROUND_SINGLE_LINE_INVOCABLE" value="0" />
+      <option name="KEEP_BLANK_LINES_IN_DECLARATIONS" value="1" />
+      <option name="KEEP_BLANK_LINES_IN_CODE" value="1" />
+      <option name="BLANK_LINES_AROUND_REGION" value="1" />
+      <option name="BLANK_LINES_INSIDE_REGION" value="1" />
+      <option name="BLANK_LINES_AROUND_FIELD" value="0" />
+      <option name="BLANK_LINES_AROUND_SINGLE_LINE_PROPERTY" value="0" />
+      <option name="BLANK_LINES_AROUND_PROPERTY" value="1" />
+      <option name="BLANK_LINES_AROUND_SINGLE_LINE_AUTO_PROPERTY" value="0" />
+      <option name="BLANK_LINES_AROUND_AUTO_PROPERTY" value="1" />
+      <option name="BLANK_LINES_AROUND_INVOCABLE" value="1" />
+      <option name="BLANK_LINES_AROUND_SINGLE_LINE_LOCAL_METHOD" value="0" />
+      <option name="BLANK_LINES_AROUND_LOCAL_METHOD" value="1" />
+      <option name="BLANK_LINES_AROUND_TYPE" value="1" />
+      <option name="BLANK_LINES_INSIDE_TYPE" value="0" />
+      <option name="BLANK_LINES_AROUND_NAMESPACE" value="1" />
+      <option name="BLANK_LINES_INSIDE_NAMESPACE" value="0" />
+      <option name="BLANK_LINES_AFTER_START_COMMENT" value="1" />
+      <option name="BLANK_LINES_BETWEEN_USING_GROUPS" value="0" />
+      <option name="BLANK_LINES_AFTER_USING_LIST" value="1" />
+      <option name="BLANK_LINES_AFTER_FILE_SCOPED_NAMESPACE_DIRECTIVE" value="1" />
+      <option name="PLACE_ABSTRACT_ACCESSORHOLDER_ON_SINGLE_LINE" value="1" />
+      <option name="PLACE_SIMPLE_ACCESSORHOLDER_ON_SINGLE_LINE" value="0" />
+      <option name="PLACE_ACCESSOR_WITH_ATTRS_HOLDER_ON_SINGLE_LINE" value="0" />
+      <option name="PLACE_SIMPLE_ACCESSOR_ON_SINGLE_LINE" value="1" />
+      <option name="PLACE_SIMPLE_METHOD_ON_SINGLE_LINE" value="0" />
+      <option name="PLACE_SIMPLE_ANONYMOUSMETHOD_ON_SINGLE_LINE" value="1" />
+      <option name="PLACE_SIMPLE_INITIALIZER_ON_SINGLE_LINE" value="1" />
+      <option name="PLACE_TYPE_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="PLACE_METHOD_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="PLACE_ACCESSORHOLDER_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="PLACE_SIMPLE_ACCESSOR_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="PLACE_COMPLEX_ACCESSOR_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="PLACE_FIELD_ATTRIBUTE_ON_SAME_LINE" value="0" />
+      <option name="WRAP_PARAMETERS_STYLE" value="2" />
+      <option name="WRAP_LINES" value="true" />
+      <option name="WRAP_BEFORE_FIRST_TYPE_PARAMETER_CONSTRAINT" value="true" />
+      <option name="WRAP_MULTIPLE_TYPE_PARAMETER_CONSTRAINTS_STYLE" value="2" />
+      <option name="WRAP_BEFORE_TYPE_PARAMETER_LANGLE" value="false" />
+      <option name="WRAP_BEFORE_EXTENDS_COLON" value="false" />
+      <option name="WRAP_EXTENDS_LIST_STYLE" value="2" />
+      <option name="WRAP_FOR_STMT_HEADER_STYLE" value="2" />
+      <option name="WRAP_MULTIPLE_DECLARATION_STYLE" value="2" />
+      <option name="WRAP_OBJECT_AND_COLLECTION_INITIALIZER_STYLE" value="2" />
+      <option name="WRAP_ARRAY_INITIALIZER_STYLE" value="2" />
+      <option name="WRAP_BEFORE_TERNARY_OPSIGNS" value="true" />
+      <option name="WRAP_TERNARY_EXPR_STYLE" value="2" />
+      <option name="WRAP_LINQ_EXPRESSIONS" value="1" />
+      <option name="WRAP_BEFORE_ARROW_WITH_EXPRESSIONS" value="false" />
+      <option name="PLACE_LINQ_INTO_ON_NEW_LINE" value="false" />
+      <option name="WRAP_BEFORE_FIRST_METHOD_CALL" value="false" />
+      <option name="WRAP_CHAINED_METHOD_CALLS" value="2" />
+      <option name="WRAP_BEFORE_INVOCATION_LPAR" value="false" />
+      <option name="WRAP_ARGUMENTS_STYLE" value="2" />
+      <option name="WRAP_BEFORE_INVOCATION_RPAR" value="false" />
+      <option name="WRAP_AFTER_DOT_IN_METHOD_CALLS" value="false" />
+      <option name="WRAP_CHAINED_BINARY_EXPRESSIONS" value="2" />
+      <option name="FORCE_CHOP_COMPOUND_IF_EXPRESSION" value="false" />
+      <option name="FORCE_CHOP_COMPOUND_WHILE_EXPRESSION" value="false" />
+      <option name="FORCE_CHOP_COMPOUND_DO_EXPRESSION" value="false" />
+      <option name="ARRANGEMENT_USELAMBDA_WHEN_POSSIBLE" value="false" />
+    </CSharpCodeStyleSettings>
+    <codeStyleSettings language="JSON">
+      <indentOptions>
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+      </indentOptions>
+    </codeStyleSettings>
+    <codeStyleSettings language="XML">
+      <indentOptions>
+        <option name="CONTINUATION_INDENT_SIZE" value="4" />
+      </indentOptions>
+    </codeStyleSettings>
+  </code_scheme>
+</component>
