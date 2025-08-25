@@ -103,24 +103,69 @@ The project includes comprehensive formatting configuration that works automatic
    - Go to **File > Settings > Tools > Actions on Save**
    - Enable **Reformat code** and **Optimize imports**
 
-#### Manual Formatting:
+### 🚀 Quick Setup
+
+To get started with development, run the setup script:
+
+```bash
+# Run the automated setup script
+./setup.sh
+```
+
+This script will:
+- 🔍 **Check for dotnet-format** and install it if needed
+- 🔧 **Configure git hooks** for automatic code quality checks
+- ✅ **Set up your development environment** with all necessary tools
+
+### 🛡️ Code Quality & Git Hooks
+
+This project uses automated code quality checks to maintain consistent standards:
+
+#### 🎯 Pre-commit Hook
+- 🎨 **Automatic formatting** of staged C# files using `dotnet-format`
+- 📝 **Re-stages formatted files** automatically
+- ✅ **Ensures consistent code style** before commits
+
+#### 🔒 Pre-push Hook
+- 🛡️ **Branch name validation** enforcing naming conventions
+- 🚫 **Blocks direct pushes** to protected branches (`main`, `develop`, `master`)
+- 📏 **Code style verification** using `dotnet format --verify-no-changes`
+- 📐 **Whitespace formatting checks** to maintain clean code
+
+#### 🛠️ Manual dotnet-format Commands
+
 ```bash
 # Format all C# files in the project
 dotnet format
 
 # Format specific file
 dotnet format --include path/to/file.cs
+
+# Check for formatting issues without fixing them
+dotnet format --verify-no-changes
+
+# Format only staged files (used by pre-commit hook)
+./scripts/formatting.sh --staged-only
 ```
 
-### Code Style Standards
+### 📋 Code Style Standards
 
 The project enforces:
-- **Indentation**: 4 spaces
-- **Line endings**: LF (Unix-style)
-- **Encoding**: UTF-8
-- **Trailing whitespace**: Automatically trimmed
-- **Final newline**: Automatically added
-- **C# conventions**: Microsoft's recommended style guidelines
-- **Braces**: Always required for control statements
-- **Null checking**: Prefer pattern matching and null coalescing
+- 📏 **Indentation**: 4 spaces
+- 🔚 **Line endings**: LF (Unix-style)
+- 🌐 **Encoding**: UTF-8
+- ✂️ **Trailing whitespace**: Automatically trimmed
+- 📄 **Final newline**: Automatically added
+- 🎯 **C# conventions**: Microsoft's recommended style guidelines
+- 🔧 **Braces**: Always required for control statements
+- 🛡️ **Null checking**: Prefer pattern matching and null coalescing
+
+### 💡 Development Workflow
+
+1. 🚀 **Run setup**: `./setup.sh` (first time only)
+2. 🌿 **Create feature branch**: Following naming conventions
+3. 💻 **Make your changes**: Code will be auto-formatted on save
+4. 💾 **Commit changes**: Pre-commit hook formats code automatically
+5. 📤 **Push to remote**: Pre-push hook validates branch and style rules
+6. 🔄 **Create Pull Request**: For code review and integration
 
