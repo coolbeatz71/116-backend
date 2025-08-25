@@ -1,15 +1,15 @@
 using Microsoft.OpenApi.Models;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, config) =>
     config.ReadFrom.Configuration(context.Configuration)
 );
 
 // Load environments variables from .env file
-// DotNetEnv.Env.Load();
-// DotNetEnv.Env.TraversePath().Load();
+DotNetEnv.Env.Load();
+DotNetEnv.Env.TraversePath().Load();
 
 builder.Services.AddAuthorization();
 
@@ -44,7 +44,7 @@ builder.Services
         }
     );
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
