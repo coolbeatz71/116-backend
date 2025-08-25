@@ -4,7 +4,9 @@ which dotnet-format > /dev/null 2>&1;
 RESULT=$?
 
 if [ $RESULT -ne 0 ]; then
-    read -p "You do not have dotnet-format installed. Want to install it now (y/n)?" choice
+    printf "You do not have dotnet-format installed. Want to install it now (y/n)? "
+    read -r choice
+
     case "$choice" in
     y|Y ) dotnet tool install --global dotnet-format --version 5.1.250801;;
     n|N ) echo "Skipping installation";;
@@ -21,4 +23,4 @@ if [ ! -d "$GIT_HOOKS_DIR" ]; then
 fi
 
 echo "$GIT_HOOKS_DIR: Copying the pre-commit hook into directory"
-cp .git_hooks/pre-commit $GIT_HOOKS_DIR/pre-commit
+cp .git_hooks/pre-commit "$GIT_HOOKS_DIR"/pre-commit
