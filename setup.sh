@@ -25,3 +25,6 @@ fi
 echo "$GIT_HOOKS_DIR: Copying the pre-commit hook into directory"
 cp .git_hooks/pre-commit "$GIT_HOOKS_DIR"/pre-commit
 cp .git_hooks/pre-commit "$GIT_HOOKS_DIR"/pre-push
+
+# ensure they are executable
+chmod +x "$GIT_HOOKS_DIR/pre-commit" "$GIT_HOOKS_DIR/pre-push"
