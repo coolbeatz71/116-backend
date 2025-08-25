@@ -5,7 +5,7 @@ namespace _116.Core.Domain;
 /// <summary>
 /// A domain event that can be handled via MediatR.
 /// </summary>
-public interface IDomainEvent: INotification
+public interface IDomainEvent : INotification
 {
     /// <summary>
     /// Gets the unique identifier for the domain event.

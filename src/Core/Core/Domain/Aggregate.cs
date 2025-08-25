@@ -4,7 +4,7 @@ namespace _116.Core.Domain;
 /// An abstract aggregate root with domain event support.
 /// </summary>
 /// <typeparam name="TId">The type of the aggregate identifier.</typeparam>
-public abstract class Aggregate<TId> : Entity<TId> , IAggregate<TId>
+public abstract class Aggregate<TId> : Entity<TId>, IAggregate<TId>
 {
     private readonly List<IDomainEvent> _domainEvents = [];
 

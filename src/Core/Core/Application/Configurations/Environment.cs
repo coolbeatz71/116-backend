@@ -28,7 +28,7 @@ public class AppEnvironment
     public static (string? port, string? db, string? user, string? pass) Database()
     {
         string? port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
-        string? db   = Environment.GetEnvironmentVariable("POSTGRES_DB");
+        string? db = Environment.GetEnvironmentVariable("POSTGRES_DB");
         string? user = Environment.GetEnvironmentVariable("POSTGRES_USER");
         string? pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 

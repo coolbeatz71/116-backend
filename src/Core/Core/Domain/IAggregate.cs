@@ -9,7 +9,7 @@ public interface IAggregate<T> : IAggregate, IEntity<T>;
 /// <summary>
 /// A non-generic base interface for aggregates supporting domain events.
 /// </summary>
-public interface IAggregate: IEntity
+public interface IAggregate : IEntity
 {
     /// <summary>
     /// Gets the list of domain events that have occurred.

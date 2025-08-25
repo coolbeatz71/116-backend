@@ -89,8 +89,8 @@ public static class DbSetExtension
         throw (keyName, keyValue) switch
         {
             (not null, not null) => new NotFoundException(entityName, keyName, keyValue),
-            (null, not null)     => new NotFoundException(entityName, keyValue),
-            _                    => new NotFoundException($"Could Not find {entityName}.")
+            (null, not null) => new NotFoundException(entityName, keyValue),
+            _ => new NotFoundException($"Could Not find {entityName}.")
         };
     }
 
@@ -140,8 +140,8 @@ public static class DbSetExtension
         throw (keyName, keyValue) switch
         {
             (not null, not null) => new NotFoundException(entityName, keyName, keyValue),
-            (null, not null)     => new NotFoundException(entityName, keyValue),
-            _                    => new NotFoundException($"Could Not find {entityName}.")
+            (null, not null) => new NotFoundException(entityName, keyValue),
+            _ => new NotFoundException($"Could Not find {entityName}.")
         };
     }
 }

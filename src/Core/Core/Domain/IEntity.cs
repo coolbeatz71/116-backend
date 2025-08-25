@@ -35,5 +35,5 @@ public interface IEntity
     /// <summary>
     /// Gets or sets the identifier the entity's last updater.
     /// </summary>
-    public string ? UpdatedBy { get; set; }
+    public string? UpdatedBy { get; set; }
 }

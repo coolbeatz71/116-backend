@@ -88,5 +88,4 @@ public class LoggingBehavior<TRequest, TResponse>
             typeof(TResponse).Name
         );
     }
-
 }
