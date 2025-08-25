@@ -8,7 +8,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="db74c52a-703a-4dac-aa0c-f64ac95673b0" name="Changes" comment="" />
+    <list default="true" id="db74c52a-703a-4dac-aa0c-f64ac95673b0" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/src/Core/Core.Contracts/CQRS/ICommand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/ICommand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Core.Contracts/CQRS/ICommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/ICommandHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Core.Contracts/CQRS/IQuery.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/IQuery.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Core/Core.Contracts/CQRS/IQueryHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/IQueryHandler.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -54,8 +59,11 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://diff.json" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock://diff.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Api/obj/Debug/net9.0/Api.AssemblyInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/ICommand.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/ICommandHandler.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/IQuery.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Core/Core.Contracts/Application/CQRS/IQueryHandler.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
@@ -68,21 +76,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHELLCHECK.PATH&quot;: &quot;/Users/coolbeatz/Library/Application Support/JetBrains/Rider2025.1/plugins/Shell Script/shellcheck&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chore-setup-project&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHELLCHECK.PATH": "/Users/coolbeatz/Library/Application Support/JetBrains/Rider2025.1/plugins/Shell Script/shellcheck",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "chore-setup-project",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Api: http">
     <configuration name="Api: http" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Api/Api.csproj" />
@@ -123,6 +132,7 @@
       <option name="presentableId" value="Default" />
       <updated>1756138554791</updated>
       <workItem from="1756138556005" duration="8714000" />
+      <workItem from="1756147413887" duration="964000" />
     </task>
     <servers />
   </component>

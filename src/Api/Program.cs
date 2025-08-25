@@ -26,7 +26,7 @@ builder.Services
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {

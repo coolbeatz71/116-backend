@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace _116.Core.Contracts.CQRS;
+namespace _116.Core.Contracts.Application.CQRS;
 
 /// <summary>
 /// Represents a query that returns a response of type <typeparamref name="TResponse"/>.

@@ -4,7 +4,7 @@
 # This hook prevents direct pushes to protected branches and validates branch naming
 
 protected_branches="main develop master"
-branch_pattern="^(feat|chore|bug|fix|doc|docs|style|refactor|perf|test|build|ci|revert|)-[a-z]+(-[a-z]+)*$"
+branch_pattern="^(feat|chore|bug|fix|doc|docs|style|refactor|perf|test|build|ci|revert)-[a-z]+(-[a-z]+)*$"
 
 # Get current branch name
 current_branch=$(git rev-parse --abbrev-ref HEAD)
