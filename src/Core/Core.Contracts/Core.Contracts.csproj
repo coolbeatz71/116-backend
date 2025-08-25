@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <RootNamespace>116.Core.Contracts</RootNamespace>
+        <RootNamespace>_116.Core.Contracts</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
