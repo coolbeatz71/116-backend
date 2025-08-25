@@ -1,6 +1,36 @@
 # 116-backend
 116 is a bold digital platform that promotes music and hip-hop culture in DR and beyond. Through articles, video shows, and exclusive behind-the-scenes content, it connects fans with artists, highlights emerging talent, and tells the stories shaping the culture.
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- IDE: [Visual Studio Code](https://code.visualstudio.com/) or [JetBrains Rider](https://www.jetbrains.com/rider/)
+
+### ⚡ Quick Setup
+
+To get started with development, run the setup script:
+
+```bash
+# Run the automated setup script
+./setup.sh
+```
+
+This script will:
+- 🔍 **Check for dotnet-format** and install it if needed
+- 🔧 **Configure git hooks** for automatic code quality checks
+- ✅ **Set up your development environment** with all necessary tools
+
+### 💡 Development Workflow
+
+1. 🚀 **Run setup**: `./setup.sh` (first time only)
+2. 🌿 **Create feature branch**: Following naming conventions
+3. 💻 **Make your changes**: Code will be auto-formatted on save
+4. 💾 **Commit changes**: Pre-commit hook formats code automatically
+5. 📤 **Push to remote**: Pre-push hook validates branch and style rules
+6. 🔄 **Create Pull Request**: For code review and integration
+
 ## Git Workflow
 
 This project follows a structured branching strategy designed for scalable development and reliable releases.
@@ -69,11 +99,6 @@ All development work is done in feature branches that follow a strict naming con
 
 This project uses .NET 9.0 and follows strict code formatting standards to ensure consistency across the codebase.
 
-### Prerequisites
-
-- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
-- IDE: [Visual Studio Code](https://code.visualstudio.com/) or [JetBrains Rider](https://www.jetbrains.com/rider/)
-
 ### Code Formatting Configuration
 
 The project includes comprehensive formatting configuration that works automatically with both VS Code and Rider:
@@ -102,20 +127,6 @@ The project includes comprehensive formatting configuration that works automatic
 2. To enable format on save in Rider:
    - Go to **File > Settings > Tools > Actions on Save**
    - Enable **Reformat code** and **Optimize imports**
-
-### 🚀 Quick Setup
-
-To get started with development, run the setup script:
-
-```bash
-# Run the automated setup script
-./setup.sh
-```
-
-This script will:
-- 🔍 **Check for dotnet-format** and install it if needed
-- 🔧 **Configure git hooks** for automatic code quality checks
-- ✅ **Set up your development environment** with all necessary tools
 
 ### 🛡️ Code Quality & Git Hooks
 
@@ -159,13 +170,4 @@ The project enforces:
 - 🎯 **C# conventions**: Microsoft's recommended style guidelines
 - 🔧 **Braces**: Always required for control statements
 - 🛡️ **Null checking**: Prefer pattern matching and null coalescing
-
-### 💡 Development Workflow
-
-1. 🚀 **Run setup**: `./setup.sh` (first time only)
-2. 🌿 **Create feature branch**: Following naming conventions
-3. 💻 **Make your changes**: Code will be auto-formatted on save
-4. 💾 **Commit changes**: Pre-commit hook formats code automatically
-5. 📤 **Push to remote**: Pre-push hook validates branch and style rules
-6. 🔄 **Create Pull Request**: For code review and integration
 
