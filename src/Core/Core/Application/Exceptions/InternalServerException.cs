@@ -1,4 +1,4 @@
-namespace Core.Application.Exceptions;
+namespace _116.Core.Application.Exceptions;
 
 /// <summary>
 /// Exception that represents an internal server error, typically indicating an unexpected failure during execution.

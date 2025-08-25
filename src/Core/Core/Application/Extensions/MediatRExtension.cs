@@ -1,9 +1,9 @@
 using System.Reflection;
-using Core.Application.Behaviors;
+using _116.Core.Application.Behaviors;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Application.Extensions;
+namespace _116.Core.Application.Extensions;
 
 /// <summary>
 /// Extension methods for registering MediatR and related pipeline behaviors.

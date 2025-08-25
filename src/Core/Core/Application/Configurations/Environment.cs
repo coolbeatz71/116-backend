@@ -1,4 +1,4 @@
-namespace Core.Application.Configurations;
+namespace _116.Core.Application.Configurations;
 
 /// <summary>
 /// Provides access to environment-specific configuration values used in the application.
@@ -27,14 +27,14 @@ public class AppEnvironment
     /// </returns>
     public static (string? port, string? db, string? user, string? pass) Database()
     {
-        var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
-        var db   = Environment.GetEnvironmentVariable("POSTGRES_DB");
-        var user = Environment.GetEnvironmentVariable("POSTGRES_USER");
-        var pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+        string? port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+        string? db   = Environment.GetEnvironmentVariable("POSTGRES_DB");
+        string? user = Environment.GetEnvironmentVariable("POSTGRES_USER");
+        string? pass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
 
         return (port, db, user, pass);
     }
-    
+
     /// <summary>
     /// Retrieves the default password used for seeding or initializing user accounts.
     /// </summary>
@@ -48,7 +48,7 @@ public class AppEnvironment
     /// </returns>
     public static string? DefaultPassword()
     {
-        var defaultPassword = Environment.GetEnvironmentVariable("DEFAULT_USER_PASSWORD");
+        string? defaultPassword = Environment.GetEnvironmentVariable("DEFAULT_USER_PASSWORD");
         return defaultPassword;
     }
 
@@ -59,7 +59,7 @@ public class AppEnvironment
     /// Expected environment variables:
     /// - JWT_SECRET: The secret key used to sign and verify JWT tokens
     /// - JWT_ISSUER: The issuer claim for JWT tokens
-    /// - JWT_AUDIENCE: The audience claim for JWT tokens  
+    /// - JWT_AUDIENCE: The audience claim for JWT tokens
     /// - JWT_EXPIRATION: The token expiration time (e.g., "1h", "30m")
     /// </remarks>
     /// <returns>
@@ -71,11 +71,11 @@ public class AppEnvironment
     /// </returns>
     public static (string? secret, string? issuer, string? audience, string? expiration) Jwt()
     {
-        var  secret = Environment.GetEnvironmentVariable("JWT_SECRET");
-        var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-        var expiration = Environment.GetEnvironmentVariable("JWT_EXPIRATION");
-        
+        string? secret = Environment.GetEnvironmentVariable("JWT_SECRET");
+        string? issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+        string? audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+        string? expiration = Environment.GetEnvironmentVariable("JWT_EXPIRATION");
+
         return (secret, issuer, audience, expiration);
     }
 }

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using _116.Core.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 

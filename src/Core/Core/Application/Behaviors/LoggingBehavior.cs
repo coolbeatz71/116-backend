@@ -2,7 +2,7 @@ using System.Diagnostics;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Core.Application.Behaviors;
+namespace _116.Core.Application.Behaviors;
 
 /// <summary>
 /// A MediatR pipeline behavior that logs the lifecycle of a request and its response.
@@ -11,7 +11,7 @@ namespace Core.Application.Behaviors;
 /// <typeparam name="TRequest">The type of the request. Must implement <see cref="IRequest{TResponse}"/>.</typeparam>
 /// <typeparam name="TResponse">The type of the response.</typeparam>
 public class LoggingBehavior<TRequest, TResponse>
-    (ILogger<LoggingBehavior<TRequest, TResponse>> logger) 
+    (ILogger<LoggingBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull
@@ -25,8 +25,8 @@ public class LoggingBehavior<TRequest, TResponse>
     /// <param name="cancellationToken">Token to cancel the operation.</param>
     /// <returns>The response after executing the request.</returns>
     public async Task<TResponse> Handle(
-        TRequest request, 
-        RequestHandlerDelegate<TResponse> next, 
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken
     )
     {
@@ -34,7 +34,7 @@ public class LoggingBehavior<TRequest, TResponse>
 
         var stopwatch = Stopwatch.StartNew();
 
-        var response = await next(cancellationToken);
+        TResponse response = await next(cancellationToken);
 
         stopwatch.Stop();
 
@@ -43,7 +43,7 @@ public class LoggingBehavior<TRequest, TResponse>
 
         return response;
     }
-    
+
     /// <summary>
     /// Logs the start of the request processing.
     /// </summary>
@@ -56,7 +56,7 @@ public class LoggingBehavior<TRequest, TResponse>
             request
         );
     }
-    
+
     /// <summary>
     /// Logs a performance warning if the elapsed time exceeds the threshold.
     /// </summary>
@@ -74,7 +74,7 @@ public class LoggingBehavior<TRequest, TResponse>
             );
         }
     }
-    
+
     /// <summary>
     /// Logs the end of request processing along with the response type.
     /// </summary>

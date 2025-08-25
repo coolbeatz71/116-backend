@@ -1,5 +1,4 @@
-namespace Core.Application.Metadata;
-
+namespace _116.Core.Application.Metadata;
 
 /// <summary>
 /// Represents metadata information for an API route.

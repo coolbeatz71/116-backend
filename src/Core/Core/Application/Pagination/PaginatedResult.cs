@@ -1,4 +1,4 @@
-namespace Core.Application.Pagination;
+namespace _116.Core.Application.Pagination;
 
 /// <summary>
 /// A paginated result set containing a subset of data items along with pagination metadata.

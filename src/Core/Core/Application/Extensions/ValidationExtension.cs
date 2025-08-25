@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Core.Application.Extensions;
+namespace _116.Core.Application.Extensions;
 
 /// <summary>
 /// Provides custom FluentValidation extensions for commonly used validation rules.

@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 
-namespace Core.Application.Specifications;
+namespace _116.Core.Application.Specifications;
 
 /// <summary>
-/// Inverts a specification using logical NOT.
+/// Inverts a specification using the logical NOT.
 /// </summary>
 public class NotSpecification<T> : Specification<T>
 {
@@ -24,9 +24,10 @@ public class NotSpecification<T> : Specification<T>
     /// <returns>An expression that evaluates to true when the inner specification is not satisfied.</returns>
     public override Expression<Func<T, bool>> ToExpression()
     {
-        var innerExpr = _inner.ToExpression();
-        var param = Expression.Parameter(typeof(T));
-        var body = Expression.Not(Expression.Invoke(innerExpr, param));
+        Expression<Func<T, bool>> innerExpr = _inner.ToExpression();
+        ParameterExpression param = Expression.Parameter(typeof(T));
+        UnaryExpression body = Expression.Not(Expression.Invoke(innerExpr, param));
+
         return Expression.Lambda<Func<T, bool>>(body, param);
     }
 }

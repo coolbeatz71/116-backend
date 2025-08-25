@@ -1,4 +1,4 @@
-namespace Core.Application.Pagination;
+namespace _116.Core.Application.Pagination;
 
 /// <summary>
 /// A basic pagination request with optional page index and page size.

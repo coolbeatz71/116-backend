@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Core.Application.Specifications;
+namespace _116.Core.Application.Specifications;
 
 /// <summary>
 /// Base class for defining specifications and composing them using logical operators.
@@ -14,7 +14,7 @@ public abstract class Specification<T> : ISpecification<T>
     /// <inheritdoc />
     public bool IsSatisfiedBy(T entity)
     {
-        var predicate = ToExpression().Compile();
+        Func<T, bool> predicate = ToExpression().Compile();
         return predicate(entity);
     }
 
@@ -29,7 +29,7 @@ public abstract class Specification<T> : ISpecification<T>
     public Specification<T> Or(Specification<T> other) => new OrSpecification<T>(this, other);
 
     /// <summary>
-    /// Inverts the current specification using logical NOT.
+    /// Inverts the current specification using the logical NOT.
     /// </summary>
     public Specification<T> Not() => new NotSpecification<T>(this);
 

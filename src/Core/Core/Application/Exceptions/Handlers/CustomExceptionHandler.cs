@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Core.Application.Exceptions.Handlers;
+namespace _116.Core.Application.Exceptions.Handlers;
 
 /// <summary>
 /// Handles unhandled exceptions thrown in the application and returns structured <see cref="ProblemDetails"/> responses.
@@ -12,8 +12,8 @@ namespace Core.Application.Exceptions.Handlers;
 /// <remarks>
 /// This handler intercepts exceptions globally and maps known exception types (e.g., <see cref="ValidationException"/>,
 /// <see cref="NotFoundException"/>)
-/// to standardized error responses. Additional metadata such as trace ID and validation errors are included when applicable.
-///
+/// to standardized error responses. Additional metadata such as trace ID
+/// and validation errors are included when applicable.
 /// To enable this handler, register it in the service container and middleware pipeline:
 /// <code>
 /// <![CDATA[
@@ -42,7 +42,7 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
             DateTime.UtcNow
         );
 
-        var problemDetails = GetProblemDetailsFromException(exception, context);
+        ProblemDetails problemDetails = GetProblemDetailsFromException(exception, context);
 
         // Enrich problem response
         problemDetails.Instance = context.Request.Path;
@@ -77,43 +77,43 @@ public class CustomExceptionHandler(ILogger<CustomExceptionHandler> logger) : IE
     /// </code>
     /// </example>
     private static ProblemDetails GetProblemDetailsFromException(
-        Exception exception, 
+        Exception exception,
         HttpContext context
     ) =>
         exception switch
         {
             ValidationException ex => CreateProblemDetails(
-                ex.Message, 
-                nameof(ValidationException), 
+                ex.Message,
+                nameof(ValidationException),
                 StatusCodes.Status400BadRequest
             ),
 
             BadRequestException ex => CreateProblemDetails(
-                ex.Message, 
-                nameof(BadRequestException), 
+                ex.Message,
+                nameof(BadRequestException),
                 StatusCodes.Status400BadRequest
             ),
-            
+
             BadHttpRequestException ex => CreateProblemDetails(
-                ex.Message, 
-                nameof(BadHttpRequestException), 
+                ex.Message,
+                nameof(BadHttpRequestException),
                 StatusCodes.Status400BadRequest
             ),
 
             NotFoundException ex => CreateProblemDetails(
-                ex.Message, nameof(NotFoundException), 
+                ex.Message, nameof(NotFoundException),
                 StatusCodes.Status404NotFound
             ),
 
             InternalServerException ex => CreateProblemDetails(
-                ex.Message, 
-                nameof(InternalServerException), 
+                ex.Message,
+                nameof(InternalServerException),
                 StatusCodes.Status500InternalServerError
             ),
-            
+
             _ => CreateProblemDetails(
-                exception.Message, 
-                exception.GetType().Name, 
+                exception.Message,
+                exception.GetType().Name,
                 StatusCodes.Status500InternalServerError
             )
         };

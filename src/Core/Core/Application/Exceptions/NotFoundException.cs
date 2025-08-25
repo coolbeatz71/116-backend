@@ -1,4 +1,4 @@
-namespace Core.Application.Exceptions;
+namespace _116.Core.Application.Exceptions;
 
 /// <summary>
 /// Exception that represents a not found error, typically indicating that a requested resource does not exist.
@@ -32,7 +32,7 @@ public class NotFoundException : Exception
         : base($"Could not find {CleanEntityName(entityName)} with id: {key}")
     {
     }
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="NotFoundException"/>
     /// class with an entity name, a key name, and a key value.

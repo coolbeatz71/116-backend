@@ -2,7 +2,7 @@ using System.Reflection;
 using Carter;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Application.Extensions;
+namespace _116.Core.Application.Extensions;
 
 /// <summary>
 /// Extension methods for registering Carter modules from specified assemblies.
@@ -32,14 +32,14 @@ public static class CarterExtension
         services.AddCarter(configurator: config =>
         {
             // For all given assemblies, find all types that implement ICarterModule
-            var modules = assemblies
+            Type[] modules = assemblies
                 .SelectMany(assembly => assembly.GetTypes()
                     .Where(t => t.IsAssignableTo(typeof(ICarterModule))))
                 .ToArray();
 
             config.WithModules(modules);
         });
-        
+
         return services;
     }
 }
