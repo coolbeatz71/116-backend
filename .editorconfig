@@ -150,7 +150,3 @@ csharp_space_between_square_brackets = false
 # Wrapping preferences
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
-
-# .NET Analyzer Rules
-dotnet_analyzer_diagnostic.category-style.severity = warning
-dotnet_analyzer_diagnostic.category-maintainability.severity = warning
