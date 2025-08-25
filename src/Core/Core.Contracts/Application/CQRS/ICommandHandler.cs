@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace _116.Core.Contracts.CQRS;
+namespace _116.Core.Contracts.Application.CQRS;
 
 /// <summary>
 /// Handles commands that do not return a response.
