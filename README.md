@@ -65,4 +65,62 @@ All development work is done in feature branches that follow a strict naming con
 - Ensure all tests pass before merging
 - Review code through pull requests before integration
 
+## Development Environment Setup
+
+This project uses .NET 9.0 and follows strict code formatting standards to ensure consistency across the codebase.
+
+### Prerequisites
+
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- IDE: [Visual Studio Code](https://code.visualstudio.com/) or [JetBrains Rider](https://www.jetbrains.com/rider/)
+
+### Code Formatting Configuration
+
+The project includes comprehensive formatting configuration that works automatically with both VS Code and Rider:
+
+#### Files Included:
+- `.editorconfig` - Universal formatting rules for all editors
+- `.vscode/settings.json` - VS Code specific settings with auto-format on save
+- `.vscode/extensions.json` - Recommended extensions for VS Code
+- `.idea/codeStyles/` - Rider/IntelliJ code style configuration
+
+#### VS Code Setup:
+1. Install recommended extensions when prompted, or install manually:
+   - `ms-dotnettools.csharp` - C# language support
+   - `ms-dotnettools.csdevkit` - C# Dev Kit
+   - `editorconfig.editorconfig` - EditorConfig support
+
+2. Auto-formatting is enabled by default for:
+   - Format on save
+   - Format on type
+   - Format on paste
+   - Organize imports on save
+   - Fix all auto-fixable issues on save
+
+#### Rider Setup:
+1. Rider will automatically detect and apply the project's code style settings
+2. To enable format on save in Rider:
+   - Go to **File > Settings > Tools > Actions on Save**
+   - Enable **Reformat code** and **Optimize imports**
+
+#### Manual Formatting:
+```bash
+# Format all C# files in the project
+dotnet format
+
+# Format specific file
+dotnet format --include path/to/file.cs
+```
+
+### Code Style Standards
+
+The project enforces:
+- **Indentation**: 4 spaces
+- **Line endings**: LF (Unix-style)
+- **Encoding**: UTF-8
+- **Trailing whitespace**: Automatically trimmed
+- **Final newline**: Automatically added
+- **C# conventions**: Microsoft's recommended style guidelines
+- **Braces**: Always required for control statements
+- **Null checking**: Prefer pattern matching and null coalescing
 
