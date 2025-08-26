@@ -18,7 +18,7 @@ public record Email
     /// <summary>
     /// Initializes a new instance of the <see cref="Email"/> record with validation.
     /// </summary>
-    /// <param name="value">The email address string to validate and store.</param>
+    /// <param name="value">The email address strings to validate and store.</param>
     /// <exception cref="ArgumentException">
     /// Thrown if the <paramref name="value"/> is null, empty, whitespace,
     /// or not a valid email format.
