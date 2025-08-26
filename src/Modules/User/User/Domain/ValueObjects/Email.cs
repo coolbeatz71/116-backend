@@ -1,3 +1,5 @@
+using System.Net.Mail;
+
 namespace _116.User.Domain.ValueObjects;
 
 /// <summary>
@@ -47,7 +49,7 @@ public record Email
     {
         try
         {
-            var addr = new System.Net.Mail.MailAddress(email);
+            var addr = new MailAddress(email);
             return addr.Address == email;
         }
         catch
