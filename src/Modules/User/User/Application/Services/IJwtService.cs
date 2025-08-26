@@ -1,5 +1,7 @@
+using _116.User.Domain.DTOs;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
+using _116.User.Domain.Results;
 
 namespace _116.User.Application.Services;
 
@@ -10,7 +12,8 @@ namespace _116.User.Application.Services;
 public interface IJwtService
 {
     /// <summary>
-    /// Generates a JWT token containing user identity, roles, permissions, and status information.
+    /// Generates a JWT token with expiration information containing user identity,
+    /// roles, permissions, and status information.
     /// </summary>
     /// <param name="userId">The unique identifier of the user.</param>
     /// <param name="email">The user's email address.</param>
@@ -21,12 +24,11 @@ public interface IJwtService
     /// <param name="isActive">Indicates whether the user account is currently active.</param>
     /// <param name="isLoggedIn">Indicates whether the user is currently logged in.</param>
     /// <param name="authProvider">The authentication provider used by the user (Local, Google, Facebook, etc.).</param>
-    /// <returns>A JWT token string containing the user's claims and authentication information.</returns>
+    /// <returns>A JWT generation result containing both the token and its expiration time.</returns>
     /// <remarks>
-    /// The generated token includes user identity claims, role-based permissions, account status,
-    /// and authentication provider information for comprehensive authorization and session management.
+    /// This provides both the JWT token and its expiration time for creating complete authentication results.
     /// </remarks>
-    string GenerateToken(
+    JwtGenerationResult GenerateToken(
         Guid userId,
         string email,
         string userName,

@@ -3,8 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using _116.BuildingBlocks.Constants;
 using _116.Core.Application.Configurations;
+using _116.User.Domain.DTOs;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
+using _116.User.Domain.Results;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,7 +19,7 @@ namespace _116.User.Application.Services;
 public class JwtService(IConfiguration configuration) : IJwtService
 {
     /// <inheritdoc />
-    public string GenerateToken(
+    public JwtGenerationResult GenerateToken(
         Guid userId,
         string email,
         string userName,
@@ -32,11 +34,13 @@ public class JwtService(IConfiguration configuration) : IJwtService
         var (secret, issuer, audience, expiration) = AppEnvironment.Jwt();
 
         if (string.IsNullOrWhiteSpace(secret))
+        {
             throw new InvalidOperationException("JWT_SECRET env variable is missing or empty.");
+        }
 
+        DateTimeOffset now = DateTimeOffset.UtcNow;
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        DateTimeOffset now = DateTimeOffset.UtcNow;
 
         var claims = new List<Claim>
         {
@@ -50,25 +54,29 @@ public class JwtService(IConfiguration configuration) : IJwtService
             new Claim(JwtClaimsConstants.AuthProvider, $"{authProvider}")
         };
 
-        claims.AddRange(BuildStatusClaims(isVerified, isActive, isLoggedIn));
         claims.AddRange(BuildRoleClaims(userRoles));
         claims.AddRange(BuildPermissionClaims(userPermissions));
+        claims.AddRange(BuildStatusClaims(isVerified, isActive, isLoggedIn));
 
         int expirationHours = int.TryParse(expiration, out int parsed)
             ? parsed
             : CoreConstants.JwtDefaultExpiration;
 
+        DateTime expiresAt = now.AddHours(expirationHours).UtcDateTime;
+
         var descriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = now.AddHours(expirationHours).UtcDateTime,
+            Expires = expiresAt,
             SigningCredentials = credentials,
             Issuer = issuer,
             Audience = audience
         };
 
         var handler = new JwtSecurityTokenHandler();
-        return handler.WriteToken(handler.CreateToken(descriptor));
+        string? token = handler.WriteToken(handler.CreateToken(descriptor));
+
+        return new JwtGenerationResult(token, expiresAt);
     }
 
     /// <summary>
