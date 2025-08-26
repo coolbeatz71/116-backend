@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using _116.Core.Domain;
-using _116.User.Domain.Users.Enums;
+using _116.User.Domain.Enums;
 
-namespace _116.User.Domain.Users.Entities;
+namespace _116.User.Domain.Entities;
 
 /// <summary>
 /// Represents a user in the authentication system, containing identity, credential,

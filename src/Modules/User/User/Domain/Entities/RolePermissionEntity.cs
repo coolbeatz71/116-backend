@@ -1,6 +1,6 @@
 using _116.Core.Domain;
 
-namespace _116.User.Domain.Users.Entities;
+namespace _116.User.Domain.Entities;
 
 /// <summary>
 /// Represents the many-to-many association between roles and permissions.

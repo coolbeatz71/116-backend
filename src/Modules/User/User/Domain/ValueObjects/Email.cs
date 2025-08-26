@@ -1,4 +1,4 @@
-namespace _116.User.Domain.Users.ValueObjects;
+namespace _116.User.Domain.ValueObjects;
 
 /// <summary>
 /// Represents a validated email address as a value object.
@@ -71,4 +71,3 @@ public record Email
     /// </exception>
     public static implicit operator Email(string email) => new(email);
 }
-

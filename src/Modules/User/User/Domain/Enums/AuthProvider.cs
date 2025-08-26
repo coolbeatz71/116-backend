@@ -1,4 +1,4 @@
-namespace _116.User.Domain.Users.Enums;
+namespace _116.User.Domain.Enums;
 
 /// <summary>
 /// Defines the supported authentication providers for a user.

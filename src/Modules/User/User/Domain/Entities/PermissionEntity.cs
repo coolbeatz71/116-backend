@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _116.Core.Domain;
 
-namespace _116.User.Domain.Users.Entities;
+namespace _116.User.Domain.Entities;
 
 /// <summary>
 /// Represents a permission that defines an action allowed on a specific resource.
