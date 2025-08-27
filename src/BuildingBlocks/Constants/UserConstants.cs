@@ -41,12 +41,12 @@ public static class UserConstants
     public const bool DeactivatedStatus = false;
 
     /// <summary>
-    /// Login status when user is logged in.
+    /// Login status when the user is logged in.
     /// </summary>
     public const bool LoggedInStatus = true;
 
     /// <summary>
-    /// Login status when user is logged out.
+    /// Login status when the user is logged out.
     /// </summary>
     public const bool LoggedOutStatus = false;
 
