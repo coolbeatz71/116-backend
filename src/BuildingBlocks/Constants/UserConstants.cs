@@ -54,4 +54,41 @@ public static class UserConstants
     /// Verification status after email is updated (requires re-verification).
     /// </summary>
     public const bool EmailUpdatedVerificationStatus = false;
+
+    // Database field length constraints
+
+    /// <summary>
+    /// Maximum allowed length for email addresses (RFC 5321 standard).
+    /// </summary>
+    public const int MaxEmailLength = 254;
+
+    /// <summary>
+    /// Maximum allowed length for country names.
+    /// </summary>
+    public const int MaxCountryNameLength = 100;
+
+    /// <summary>
+    /// Maximum allowed length for country flag URLs.
+    /// </summary>
+    public const int MaxCountryFlagUrlLength = 500;
+
+    /// <summary>
+    /// Maximum allowed length for country ISO codes.
+    /// </summary>
+    public const int MaxCountryIsoCodeLength = 3;
+
+    /// <summary>
+    /// Maximum allowed length for country dial codes.
+    /// </summary>
+    public const int MaxCountryDialCodeLength = 10;
+
+    /// <summary>
+    /// Maximum allowed length for partial phone numbers.
+    /// </summary>
+    public const int MaxPartialPhoneNumberLength = 50;
+
+    /// <summary>
+    /// Maximum allowed length for full phone numbers.
+    /// </summary>
+    public const int MaxFullPhoneNumberLength = 20;
 }
