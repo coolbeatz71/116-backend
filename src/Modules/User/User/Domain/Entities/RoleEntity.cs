@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using _116.BuildingBlocks.Constants;
 using _116.Core.Domain;
 
 namespace _116.User.Domain.Entities;
@@ -11,13 +12,13 @@ public class RoleEntity : Aggregate<Guid>
     /// <summary>
     /// Name of the role (e.g., "Admin", "Editor").
     /// </summary>
-    [MaxLength(20)]
+    [MaxLength(RoleConstants.MaxRoleNameLength)]
     public string Name { get; private set; } = null!;
 
     /// <summary>
     /// Human-readable description of the role's purpose or scope.
     /// </summary>
-    [MaxLength(300)]
+    [MaxLength(RoleConstants.MaxRoleDescriptionLength)]
     public string Description { get; private set; } = null!;
 
     /// <summary>

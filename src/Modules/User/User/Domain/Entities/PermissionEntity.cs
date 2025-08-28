@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using _116.BuildingBlocks.Constants;
 using _116.Core.Domain;
 
 namespace _116.User.Domain.Entities;
@@ -14,19 +15,19 @@ public class PermissionEntity : Aggregate<Guid>
     /// <summary>
     /// The name or key of the resource (e.g., "user", "receipt", "article").
     /// </summary>
-    [MaxLength(15)]
+    [MaxLength(PermissionConstants.MaxPermissionResourceLength)]
     public string Resource { get; private set; } = null!;
 
     /// <summary>
     /// The type of action allowed on the resource (e.g., "read", "create", "approve").
     /// </summary>
-    [MaxLength(15)]
+    [MaxLength(PermissionConstants.MaxPermissionActionLength)]
     public string Action { get; private set; } = null!;
 
     /// <summary>
     /// Human-readable description of the permission's purpose or scope.
     /// </summary>
-    [MaxLength(300)]
+    [MaxLength(PermissionConstants.MaxPermissionDescriptionLength)]
     public string Description { get; private set; } = null!;
 
     /// <summary>

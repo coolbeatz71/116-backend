@@ -19,6 +19,7 @@ public class UserEntity : Aggregate<Guid>
     /// Email address of the user.
     /// May be <c>null</c> for external authentication providers (e.g., Facebook).
     /// </summary>
+    [MaxLength(UserConstants.MaxEmailLength)]
     public string? Email { get; private set; }
 
     /// <summary>
@@ -72,31 +73,37 @@ public class UserEntity : Aggregate<Guid>
     /// <summary>
     /// Full country name associated with the user.
     /// </summary>
+    [MaxLength(UserConstants.MaxCountryNameLength)]
     public string? CountryName { get; private set; }
 
     /// <summary>
     /// URL link to the flag of the user's country.
     /// </summary>
+    [MaxLength(UserConstants.MaxCountryFlagUrlLength)]
     public string? CountryFlagUrl { get; private set; }
 
     /// <summary>
     /// ISO country code (e.g., "US", "RW").
     /// </summary>
+    [MaxLength(UserConstants.MaxCountryIsoCodeLength)]
     public string? CountryIsoCode { get; private set; }
 
     /// <summary>
     /// Country dialing code (e.g., "+1", "+250").
     /// </summary>
+    [MaxLength(UserConstants.MaxCountryDialCodeLength)]
     public string? CountryDialCode { get; private set; }
 
     /// <summary>
     /// Partial (masked) phone number for privacy display.
     /// </summary>
+    [MaxLength(UserConstants.MaxPartialPhoneNumberLength)]
     public string? PartialPhoneNumber { get; private set; }
 
     /// <summary>
     /// Full phone number including country code.
     /// </summary>
+    [MaxLength(UserConstants.MaxFullPhoneNumberLength)]
     public string? FullPhoneNumber { get; private set; }
 
     /// <summary>

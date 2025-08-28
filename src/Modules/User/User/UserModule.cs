@@ -1,6 +1,158 @@
+using System.Text;
+using System.Text.Json;
+using _116.Core.Application.Configurations;
+using _116.Core.Infrastructure;
+using _116.Core.Infrastructure.Modules;
+using _116.User.Application.Services;
+using _116.User.Domain.Enums;
+using _116.User.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+
 namespace _116.User;
 
-public class UserModule
+/// <summary>
+/// Provides extension methods to register and configure the User module's services and middleware.
+/// </summary>
+public static class UserModule
 {
-    
+    /// <summary>
+    /// Gets the shared module configuration options for the User module.
+    /// </summary>
+    private static ModuleOptions<UserDbContext> GetModuleOptions() => new()
+    {
+        ModuleName = "User",
+        SchemaName = "user",
+        EnableMigrations = true,
+        EnableSeeding = true
+    };
+
+    /// <summary>
+    /// Adds the User module's services to the dependency injection container.
+    /// </summary>
+    /// <param name="services">The service collection to register services into.</param>
+    /// <param name="configuration">The application configuration instance.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
+    /// <remarks>
+    /// Registers database context with interceptors, authentication services, JWT configuration,
+    /// and authorization policies for user management.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// builder.Services.AddUserModule(builder.Configuration);
+    /// </code>
+    /// </example>
+    public static IServiceCollection AddUserModule(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Add services to the container.
+        // Api Endpoint services.
+        // Application UseCase services.
+        // DataSource - Infrastructure services.
+
+        // Register the database with base module infrastructure
+        services.AddModuleDatabase(configuration, GetModuleOptions());
+
+        // Register user management services.
+        services.AddScoped<IJwtService, JwtService>();
+        services.AddScoped<IPasswordService, PasswordService>();
+
+        // Register data seeder for initial user data population.
+        // services.AddScoped<IDataSeeder, UserDataSeeder>();
+
+        // Configure JWT Authentication.
+        var (secret, issuer, audience, expiration) = AppEnvironment.Jwt();
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = issuer,
+                ValidAudience = audience,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!)),
+                ClockSkew = TimeSpan.Zero
+            };
+
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+                    context.Response.StatusCode = 401;
+                    context.Response.ContentType = "application/json";
+
+                    var response = new
+                    {
+                        error = "Unauthorized",
+                        message = "Authentication required. Please provide a valid JWT token."
+                    };
+
+                    return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                },
+
+                OnForbidden = context =>
+                {
+                    context.Response.StatusCode = 403;
+                    context.Response.ContentType = "application/json";
+
+                    var response = new
+                    {
+                        error = "Forbidden",
+                        message = "Access denied. You don't have permission to access this resource."
+                    };
+
+                    return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+                }
+            };
+        });
+
+        // Configure Authorization Policies.
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequireVerifiedUser", policy =>
+                policy.RequireClaim("is_verified", "true"))
+            .AddPolicy("RequireActiveUser", policy =>
+                policy.RequireClaim("is_active", "true"))
+            .AddPolicy("RequireLoggedInUser", policy =>
+                policy.RequireClaim("is_logged_in", "true"))
+            .AddPolicy("LocalAuthOnly", policy =>
+                policy.RequireClaim("auth_provider", nameof(AuthProvider.Local)))
+            .AddPolicy("ExternalAuthOnly", policy =>
+                policy.RequireAssertion(context =>
+                {
+                    var authProvider = context.User.FindFirst("auth_provider")?.Value;
+                    return authProvider != nameof(AuthProvider.Local);
+                }));
+
+        return services;
+    }
+
+    /// <summary>
+    /// Configures the User module's middleware in the application pipeline.
+    /// </summary>
+    /// <param name="app">The application builder.</param>
+    /// <returns>The updated <see cref="IApplicationBuilder"/> for chaining.</returns>
+    /// <remarks>
+    /// Applies pending EF Core migrations and executes the data seeder for user management.
+    /// </remarks>
+    /// <example>
+    /// <code>
+    /// app.UseUserModule();
+    /// </code>
+    /// </example>
+    public static IApplicationBuilder UseUserModule(this IApplicationBuilder app)
+    {
+        // Configure Http request pipeline.
+        // Use Api endpoint services.
+        // Use application UseCase services.
+        // Use DataSource - Infrastructure services.
+        app.UseModuleDatabase(GetModuleOptions());
+
+        return app;
+    }
 }
