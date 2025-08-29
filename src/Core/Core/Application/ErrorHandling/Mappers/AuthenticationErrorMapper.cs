@@ -1,5 +1,9 @@
+using System.Security.Claims;
+using System.Security.Principal;
 using _116.Core.Application.ErrorHandling.Abstractions;
+using _116.Core.Application.ErrorHandling.Enums;
 using _116.Core.Application.ErrorHandling.Models;
+using _116.Core.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -60,22 +64,27 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     /// </summary>
     private ErrorResponse CreateUnauthorizedResponse(UnauthorizedAccessException exception, HttpContext context)
     {
-        logger.LogWarning(
-            "Unauthorized access attempt for {RequestPath}. User: {User}",
+        IIdentity? identity = context.User.Identity;
+        logger.LogWarning(exception,
+            "Unauthorized access attempt for {RequestPath}. User: {User}. Exception: {ExceptionMessage}",
             context.Request.Path,
-            context.User.Identity?.Name ?? "Anonymous"
+            identity?.Name ?? "Anonymous",
+            exception.Message
         );
 
         var extensions = new Dictionary<string, object>
         {
-            ["authenticationScheme"] = context.User?.Identity!.AuthenticationType ?? "Unknown",
-            ["requiresAuthentication"] = !context.User?.Identity!.IsAuthenticated ?? true
+            ["authenticationScheme"] = identity?.AuthenticationType ?? "Unknown",
+            ["requiresAuthentication"] = identity?.IsAuthenticated != true,
+            ["exceptionType"] = exception.GetType().Name
         };
 
         return ErrorResponse.CreateWithExtensions(
             title: "Unauthorized",
             status: StatusCodes.Status401Unauthorized,
-            detail: "Authentication required. Please provide valid credentials.",
+            detail: !string.IsNullOrEmpty(exception.Message)
+                ? exception.Message
+                : "Authentication required. Please provide valid credentials.",
             instance: context.Request.Path,
             traceId: context.TraceIdentifier,
             extensions: extensions
@@ -114,17 +123,19 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     /// </summary>
     private ErrorResponse CreateAuthorizationResponse(AuthorizationException exception, HttpContext context)
     {
+        IIdentity? identity = context.User.Identity;
         logger.LogWarning(
             "Authorization failed for user {User} accessing {RequestPath}. Required: {RequiredPermission}",
-            context.User?.Identity?.Name ?? "Anonymous",
+            identity?.Name ?? "Anonymous",
             context.Request.Path,
             exception.RequiredPermission
         );
 
+        string[] userRoles = context.User.FindAll(ClaimTypes.Role).Select(c => c.Value).ToArray();
         var extensions = new Dictionary<string, object>
         {
             ["requiredPermission"] = exception.RequiredPermission,
-            ["userRoles"] = context.User?.FindAll("role")?.Select(c => c.Value).ToArray() ?? []
+            ["userRoles"] = userRoles
         };
 
         return ErrorResponse.CreateWithExtensions(
@@ -194,80 +205,3 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
         );
     }
 }
-
-#region Custom Authentication Exception Types
-
-/// <summary>
-/// Exception thrown when authentication fails.
-/// </summary>
-public sealed class AuthenticationException : Exception
-{
-    /// <summary>
-    /// The reason for authentication failure.
-    /// </summary>
-    public string Reason { get; }
-
-    /// <summary>
-    /// The authentication scheme that was used.
-    /// </summary>
-    public string? AuthenticationScheme { get; }
-
-    public AuthenticationException(string message, string reason, string? authenticationScheme = null)
-        : base(message)
-    {
-        Reason = reason;
-        AuthenticationScheme = authenticationScheme;
-    }
-}
-
-/// <summary>
-/// Exception thrown when authorization fails.
-/// </summary>
-public sealed class AuthorizationException : Exception
-{
-    /// <summary>
-    /// The permission or role required for access.
-    /// </summary>
-    public string RequiredPermission { get; }
-
-    public AuthorizationException(string message, string requiredPermission) : base(message)
-    {
-        RequiredPermission = requiredPermission;
-    }
-}
-
-/// <summary>
-/// Exception thrown when JWT token issues occur.
-/// </summary>
-public sealed class JwtTokenException : Exception
-{
-    /// <summary>
-    /// The specific issue with the JWT token.
-    /// </summary>
-    public JwtTokenIssue Issue { get; }
-
-    /// <summary>
-    /// Whether the token is expired.
-    /// </summary>
-    public bool IsExpired { get; }
-
-    public JwtTokenException(string message, JwtTokenIssue issue, bool isExpired = false) : base(message)
-    {
-        Issue = issue;
-        IsExpired = isExpired;
-    }
-}
-
-/// <summary>
-/// Enumeration of possible JWT token issues.
-/// </summary>
-public enum JwtTokenIssue
-{
-    Missing,
-    Invalid,
-    Expired,
-    Malformed,
-    Unauthorized
-}
-
-#endregion

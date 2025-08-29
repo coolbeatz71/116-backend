@@ -69,7 +69,8 @@ public static class AuthorizationExtensions
     /// <returns>The authorization builder for method chaining</returns>
     private static AuthorizationBuilder ConfigureAccountStatusPolicies(
         this AuthorizationBuilder authBuilder,
-        Dictionary<string, (string ClaimType, string ClaimValue)> policies)
+        Dictionary<string, (string ClaimType, string ClaimValue)> policies
+    )
     {
         foreach (var (policyName, (claimType, claimValue)) in policies)
         {
@@ -89,7 +90,8 @@ public static class AuthorizationExtensions
     /// <returns>The authorization builder for method chaining</returns>
     private static AuthorizationBuilder ConfigureUserRolePolicies(
         this AuthorizationBuilder authBuilder,
-        Dictionary<string, string[]> policies)
+        Dictionary<string, string[]> policies
+    )
     {
         foreach (var (policyName, roles) in policies)
         {
