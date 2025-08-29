@@ -13,6 +13,7 @@
     <ItemGroup>
         <ProjectReference Include="../../../Core/Core/Core.csproj" />
         <ProjectReference Include="../../../Core/Core.Contracts/Core.Contracts.csproj" />
+        <ProjectReference Include="../../../BuildingBlocks/BuildingBlocks.csproj" />
     </ItemGroup>
     
 </Project>
