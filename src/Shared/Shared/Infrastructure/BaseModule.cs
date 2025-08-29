@@ -4,7 +4,6 @@ using _116.Shared.Infrastructure.interceptors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace _116.Shared.Infrastructure;
@@ -19,7 +18,6 @@ public static class BaseModule
     /// </summary>
     /// <typeparam name="TDbContext">The DbContext type for the module</typeparam>
     /// <param name="services">The service collection</param>
-    /// <param name="configuration">The application configuration</param>
     /// <param name="options">Module-specific configuration options</param>
     /// <returns>The updated service collection for chaining</returns>
     /// <remarks>
@@ -33,9 +31,8 @@ public static class BaseModule
     /// </remarks>
     public static IServiceCollection AddModuleDatabase<TDbContext>(
         this IServiceCollection services,
-        IConfiguration configuration,
-        ModuleOptions<TDbContext> options)
-        where TDbContext : DbContext
+        ModuleOptions<TDbContext> options
+    ) where TDbContext : DbContext
     {
         // Get connection string - use custom or default
         string? connectionString = options.ConnectionString ?? GetDefaultConnectionString();

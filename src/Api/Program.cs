@@ -34,8 +34,8 @@ builder.Services.AddMediatRWithAssemblies(
 builder.Services.AddAuthorization();
 
 builder.Services
-    .AddCoreModule(builder.Configuration)
-    .AddUserModule(builder.Configuration)
+    .AddCoreModule()
+    .AddUserModule()
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(c =>
         {

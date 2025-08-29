@@ -6,7 +6,6 @@ using _116.Shared.Application.Configurations;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
 using _116.User.Domain.Results;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace _116.User.Application.Services;
@@ -14,8 +13,7 @@ namespace _116.User.Application.Services;
 /// <summary>
 /// Service responsible for generating JWT tokens with user claims, roles, and permissions.
 /// </summary>
-/// <param name="configuration">Application configuration for JWT settings</param>
-public class JwtService(IConfiguration configuration) : IJwtService
+public class JwtService : IJwtService
 {
     /// <inheritdoc />
     public JwtGenerationResult GenerateToken(

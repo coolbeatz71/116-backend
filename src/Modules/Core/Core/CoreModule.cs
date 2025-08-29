@@ -26,7 +26,6 @@ public static class CoreModule
     /// Adds the Core module's services to the dependency injection container.
     /// </summary>
     /// <param name="services">The service collection to register services into.</param>
-    /// <param name="configuration">The application configuration instance.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
     /// <remarks>
     /// Registers database context with interceptors for core management including file handling.
@@ -36,10 +35,10 @@ public static class CoreModule
     /// builder.Services.AddCoreModule(builder.Configuration);
     /// </code>
     /// </example>
-    public static IServiceCollection AddCoreModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCoreModule(this IServiceCollection services)
     {
         // Register the database with base module infrastructure
-        services.AddModuleDatabase(configuration, GetModuleOptions());
+        services.AddModuleDatabase(GetModuleOptions());
 
         // Register core management services here when necessary
         // services.AddScoped<IFileService, FileService>();

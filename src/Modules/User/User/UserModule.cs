@@ -6,7 +6,6 @@ using _116.User.Application.Services;
 using _116.User.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,7 +31,6 @@ public static class UserModule
     /// Adds the User module's services to the dependency injection container.
     /// </summary>
     /// <param name="services">The service collection to register services into.</param>
-    /// <param name="configuration">The application configuration instance.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
     /// <remarks>
     /// Registers database context with interceptors, authentication services, JWT configuration,
@@ -43,7 +41,7 @@ public static class UserModule
     /// builder.Services.AddUserModule(builder.Configuration);
     /// </code>
     /// </example>
-    public static IServiceCollection AddUserModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddUserModule(this IServiceCollection services)
     {
         // Add services to the container.
         // Api Endpoint services.
@@ -51,7 +49,7 @@ public static class UserModule
         // DataSource - Infrastructure services.
 
         // Register the database with base module infrastructure
-        services.AddModuleDatabase(configuration, GetModuleOptions());
+        services.AddModuleDatabase(GetModuleOptions());
 
         // Register user management services
         services.AddScoped<IJwtService, JwtService>();
