@@ -1,4 +1,4 @@
-using _116.System.Domain.DTOs;
+using _116.Core.Domain.DTOs;
 using _116.User.Domain.Enums;
 
 namespace _116.User.Domain.DTOs;

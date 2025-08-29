@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Domain;
 
-namespace _116.System.Domain.Entities;
+namespace _116.Core.Domain.Entities;
 
 /// <summary>
 /// Represents a file uploaded to the system, containing metadata and storage information

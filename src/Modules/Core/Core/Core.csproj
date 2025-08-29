@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <RootNamespace>_116.System</RootNamespace>
+        <RootNamespace>_116.Core</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

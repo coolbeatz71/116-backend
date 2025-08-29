@@ -1,19 +1,19 @@
 using System.Reflection;
-using _116.System.Domain.Entities;
+using _116.Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace _116.System.Infrastructure.Persistence;
+namespace _116.Core.Infrastructure.Persistence;
 
 /// <summary>
-/// Entity Framework database context for the system module.
-/// Manages file entities and related system data within the "system" schema.
+/// Entity Framework database context for the core module.
+/// Manages file entities and related core data within the "core" schema.
 /// </summary>
 /// <param name="options">The database context configuration options</param>
 /// <remarks>
 /// This context provides access to system-wide data including file management.
-/// All entities are stored in the "system" schema.
+/// All entities are stored in the "core" schema.
 /// </remarks>
-public class SystemDbContext(DbContextOptions<SystemDbContext> options) : DbContext(options)
+public class CoreDbContext(DbContextOptions<CoreDbContext> options) : DbContext(options)
 {
     /// <summary>
     /// Gets the collection of file entities representing uploaded files in the system.
@@ -30,7 +30,7 @@ public class SystemDbContext(DbContextOptions<SystemDbContext> options) : DbCont
     /// </remarks>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema("system");
+        modelBuilder.HasDefaultSchema("core");
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }

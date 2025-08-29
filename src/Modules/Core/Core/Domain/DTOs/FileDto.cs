@@ -1,4 +1,4 @@
-namespace _116.System.Domain.DTOs;
+namespace _116.Core.Domain.DTOs;
 
 /// <summary>
 /// Data transfer object representing file information for UI display.

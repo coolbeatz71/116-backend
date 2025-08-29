@@ -1,67 +1,66 @@
-using _116.Shared.Application.Configurations;
 using _116.Shared.Infrastructure;
-using _116.System.Infrastructure.Persistence;
+using _116.Core.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace _116.System;
+namespace _116.Core;
 
 /// <summary>
-/// Provides extension methods to register and configure the System module's services and middleware.
+/// Provides extension methods to register and configure the Core module's services and middleware.
 /// </summary>
-public static class SystemModule
+public static class CoreModule
 {
     /// <summary>
-    /// Gets the shared module configuration options for the System module.
+    /// Gets the shared module configuration options for the Core module.
     /// </summary>
-    private static ModuleOptions<SystemDbContext> GetModuleOptions() => new()
+    private static ModuleOptions<CoreDbContext> GetModuleOptions() => new()
     {
-        ModuleName = "System",
-        SchemaName = "system",
+        ModuleName = "Core",
+        SchemaName = "core",
         EnableMigrations = true,
         EnableSeeding = false
     };
 
     /// <summary>
-    /// Adds the System module's services to the dependency injection container.
+    /// Adds the Core module's services to the dependency injection container.
     /// </summary>
     /// <param name="services">The service collection to register services into.</param>
     /// <param name="configuration">The application configuration instance.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
     /// <remarks>
-    /// Registers database context with interceptors for system management including file handling.
+    /// Registers database context with interceptors for core management including file handling.
     /// </remarks>
     /// <example>
     /// <code>
-    /// builder.Services.AddSystemModule(builder.Configuration);
+    /// builder.Services.AddCoreModule(builder.Configuration);
     /// </code>
     /// </example>
-    public static IServiceCollection AddSystemModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddCoreModule(this IServiceCollection services, IConfiguration configuration)
     {
         // Register the database with base module infrastructure
         services.AddModuleDatabase(configuration, GetModuleOptions());
 
-        // Register system management services here when needed
+        // Register core management services here when necessary
         // services.AddScoped<IFileService, FileService>();
 
         return services;
     }
 
     /// <summary>
-    /// Configures the System module's middleware in the application pipeline.
+    /// Configures the Core module's middleware in the application pipeline.
     /// </summary>
     /// <param name="app">The application builder.</param>
     /// <returns>The updated <see cref="IApplicationBuilder"/> for chaining.</returns>
     /// <remarks>
-    /// Applies pending EF Core migrations for system management.
+    /// Applies pending EF Core migrations for core management.
     /// </remarks>
     /// <example>
     /// <code>
-    /// app.UseSystemModule();
+    /// app.UseCoreModule();
     /// </code>
     /// </example>
-    public static IApplicationBuilder UseSystemModule(this IApplicationBuilder app)
+    public static IApplicationBuilder UseCoreModule(this IApplicationBuilder app)
     {
         // Configure Http request pipeline.
         app.UseModuleDatabase(GetModuleOptions());
