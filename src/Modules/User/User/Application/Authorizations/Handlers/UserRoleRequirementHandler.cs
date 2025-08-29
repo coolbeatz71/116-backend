@@ -27,14 +27,10 @@ public class UserRoleRequirementHandler : AuthorizationHandler<UserRoleRequireme
         // Extract user's role from JWT token claims
         string? userRole = context.User.FindFirst(ClaimTypes.Role)?.Value;
 
-        // Fail silently if user has no role claim
-        if (string.IsNullOrEmpty(userRole))
-        {
-            return Task.CompletedTask;
-        }
-
         // Authorize if the user role matches any allowed role (case-insensitive)
-        if (requirement.AllowedRoles.Contains(userRole, StringComparer.OrdinalIgnoreCase))
+        bool isUserRoleMatching = requirement.AllowedRoles.Contains(userRole, StringComparer.OrdinalIgnoreCase);
+
+        if (!string.IsNullOrEmpty(userRole) && isUserRoleMatching)
         {
             context.Succeed(requirement);
         }

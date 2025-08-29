@@ -1,13 +1,10 @@
 using System.Text;
 using _116.Core.Application.Configurations;
 using _116.Core.Infrastructure;
-using _116.User.Application.Authorizations.Policies;
-using _116.User.Application.Authorizations.Requirements;
+using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
-using _116.User.Domain.Enums;
 using _116.User.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,14 +53,14 @@ public static class UserModule
         // Register the database with base module infrastructure
         services.AddModuleDatabase(configuration, GetModuleOptions());
 
-        // Register user management services.
+        // Register user management services
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPasswordService, PasswordService>();
 
-        // Register data seeder for initial user data population.
+        // Register data seeder for initial user data population
         // services.AddScoped<IDataSeeder, UserDataSeeder>();
 
-        // Configure JWT Authentication.
+        // Configure JWT Authentication
         var (secret, issuer, audience, _) = AppEnvironment.Jwt();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
@@ -80,33 +77,8 @@ public static class UserModule
             };
         });
 
-        // Configure Authorization Policies.
-        // TODO: should replace this with a more robust setup
-        // services.AddAuthorizationBuilder()
-        //     .AddPolicy("RequireVerifiedUser", policy => policy.RequireClaim("is_verified", "true"))
-        //     .AddPolicy("RequireActiveUser", policy => policy.RequireClaim("is_active", "true"))
-        //     .AddPolicy("RequireLoggedInUser", policy => policy.RequireClaim("is_logged_in", "true"))
-        //     .AddPolicy("LocalAuthOnly", policy => policy.RequireClaim("auth_provider", nameof(AuthProvider.Local)))
-        //     .AddPolicy("ExternalAuthOnly", policy => policy.RequireAssertion(context =>
-        //         {
-        //             string? authProvider = context.User.FindFirst("auth_provider")?.Value;
-        //             return authProvider != nameof(AuthProvider.Local);
-        //         })
-        //     );
-        AuthorizationBuilder authBuilder = services.AddAuthorizationBuilder();
-
-        var policyUserRoleMap = new Dictionary<string, string[]>
-        {
-            { UserRolePolicies.RequireAdminOnly, [nameof(CoreUserRole.Admin)] },
-            { UserRolePolicies.RequireSuperAdminOnly, [nameof(CoreUserRole.SuperAdmin)] }
-        };
-
-        foreach (var (policyName, roles) in policyUserRoleMap)
-        {
-            authBuilder.AddPolicy(policyName, policy =>
-                policy.Requirements.Add(new UserRoleRequirement(roles))
-            );
-        }
+        // Configure Authorization using centralized configuration
+        services.AddUserModuleAuthorization();
 
         return services;
     }
