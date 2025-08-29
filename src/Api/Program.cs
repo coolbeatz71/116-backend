@@ -1,6 +1,7 @@
 using System.Reflection;
 using _116.Core.Application.ErrorHandling.Extensions;
 using _116.Core.Application.Extensions;
+using _116.System;
 using Carter;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -17,19 +18,23 @@ DotNetEnv.Env.TraversePath().Load();
 
 // Add services to the container.
 // Register Carter and MediatR Assemblies
+Assembly systemAssembly = typeof(SystemModule).Assembly;
 Assembly userAssembly = typeof(UserModule).Assembly;
 
 builder.Services.AddCarterWithAssemblies(
+    systemAssembly,
     userAssembly
 );
 
 builder.Services.AddMediatRWithAssemblies(
+    systemAssembly,
     userAssembly
 );
 
 builder.Services.AddAuthorization();
 
 builder.Services
+    .AddSystemModule(builder.Configuration)
     .AddUserModule(builder.Configuration)
     .AddEndpointsApiExplorer()
     .AddSwaggerGen(c =>
@@ -75,7 +80,9 @@ app.UseAuthorization();
 app.MapCarter();
 
 // Configure middleware extensions  modules.
-app.UseUserModule();
+app
+    .UseSystemModule()
+    .UseUserModule();
 
 app.Run();
 
