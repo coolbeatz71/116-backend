@@ -12,8 +12,7 @@ public class BadRequestException : Exception
     public BadRequestException(string message) : base(message) { }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BadRequestException"/>
-    /// class with a custom message and additional details.
+    /// Initializes a new instance of the <see cref="BadRequestException"/> class with a custom message and additional details.
     /// </summary>
     /// <param name="message">The error message that describes the issue.</param>
     /// <param name="details">Additional context or information about the bad request.</param>
