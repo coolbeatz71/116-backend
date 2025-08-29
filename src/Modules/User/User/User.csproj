@@ -12,8 +12,8 @@
 
     <ItemGroup>
         <ProjectReference Include="../../../BuildingBlocks/BuildingBlocks.csproj" />
-        <ProjectReference Include="../../../Core/Core/Core.csproj" />
-        <ProjectReference Include="../../../Core/Core.Contracts/Core.Contracts.csproj" />
+        <ProjectReference Include="../../../Shared/Shared/Shared.csproj" />
+        <ProjectReference Include="../../../Shared/Shared.Contracts/Shared.Contracts.csproj" />
         <ProjectReference Include="../../System/System/System.csproj" />
     </ItemGroup>
 

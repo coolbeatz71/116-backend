@@ -1,6 +1,6 @@
 using System.Text;
-using _116.Core.Application.Configurations;
-using _116.Core.Infrastructure;
+using _116.Shared.Application.Configurations;
+using _116.Shared.Infrastructure;
 using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
 using _116.User.Infrastructure.Persistence;

@@ -1,5 +1,5 @@
-using _116.Core.Application.Configurations;
-using _116.Core.Infrastructure;
+using _116.Shared.Application.Configurations;
+using _116.Shared.Infrastructure;
 using _116.System.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;

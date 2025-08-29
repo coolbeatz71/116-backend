@@ -1,4 +1,4 @@
-using _116.Core.Domain;
+using _116.Shared.Domain;
 
 namespace _116.User.Domain.Entities;
 

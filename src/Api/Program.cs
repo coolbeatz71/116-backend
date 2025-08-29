@@ -1,6 +1,6 @@
 using System.Reflection;
-using _116.Core.Application.ErrorHandling.Extensions;
-using _116.Core.Application.Extensions;
+using _116.Shared.Application.ErrorHandling.Extensions;
+using _116.Shared.Application.Extensions;
 using _116.System;
 using Carter;
 using Microsoft.OpenApi.Models;
