@@ -14,7 +14,7 @@
         <ProjectReference Include="../../../BuildingBlocks/BuildingBlocks.csproj" />
         <ProjectReference Include="../../../Core/Core/Core.csproj" />
         <ProjectReference Include="../../../Core/Core.Contracts/Core.Contracts.csproj" />
-        <ProjectReference Include="..\..\System\System\System.csproj" />
+        <ProjectReference Include="../../System/System/System.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -22,10 +22,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
         <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.2.1" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Infrastructure\Persistence\Configurations\" />
     </ItemGroup>
 
 </Project>
