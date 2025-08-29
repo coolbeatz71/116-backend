@@ -1,5 +1,4 @@
 using System.Text;
-using System.Text.Json;
 using _116.Core.Application.Configurations;
 using _116.Core.Infrastructure;
 using _116.User.Application.Services;
@@ -7,7 +6,6 @@ using _116.User.Domain.Enums;
 using _116.User.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -63,7 +61,7 @@ public static class UserModule
         // services.AddScoped<IDataSeeder, UserDataSeeder>();
 
         // Configure JWT Authentication.
-        var (secret, issuer, audience, expiration) = AppEnvironment.Jwt();
+        var (secret, issuer, audience, _) = AppEnvironment.Jwt();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -77,42 +75,10 @@ public static class UserModule
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret!)),
                 ClockSkew = TimeSpan.Zero
             };
-
-            //TODO: those should be replaced to use the ErrorPipeline handler
-            options.Events = new JwtBearerEvents
-            {
-                OnChallenge = context =>
-                {
-                    context.HandleResponse();
-                    context.Response.StatusCode = 401;
-                    context.Response.ContentType = "application/json";
-
-                    var response = new
-                    {
-                        error = "Unauthorized",
-                        message = "Authentication required. Please provide a valid JWT token."
-                    };
-
-                    return context.Response.WriteAsync(JsonSerializer.Serialize(response));
-                },
-
-                OnForbidden = context =>
-                {
-                    context.Response.StatusCode = 403;
-                    context.Response.ContentType = "application/json";
-
-                    var response = new
-                    {
-                        error = "Forbidden",
-                        message = "Access denied. You don't have permission to access this resource."
-                    };
-
-                    return context.Response.WriteAsync(JsonSerializer.Serialize(response));
-                }
-            };
         });
 
         // Configure Authorization Policies.
+        // TODO: should replace this with a more robust setup
         services.AddAuthorizationBuilder()
             .AddPolicy("RequireVerifiedUser", policy => policy.RequireClaim("is_verified", "true"))
             .AddPolicy("RequireActiveUser", policy => policy.RequireClaim("is_active", "true"))
@@ -122,7 +88,8 @@ public static class UserModule
                 {
                     string? authProvider = context.User.FindFirst("auth_provider")?.Value;
                     return authProvider != nameof(AuthProvider.Local);
-                }));
+                })
+            );
 
         return services;
     }
