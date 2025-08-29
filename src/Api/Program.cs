@@ -1,3 +1,4 @@
+using _116.Core.Application.ErrorHandling.Extensions;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -44,13 +45,15 @@ builder.Services
         }
     );
 
+builder.Services.AddErrorPipelineHandler();
+
 WebApplication app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
-app.UseExceptionHandler(_ => { });
+app.UseErrorPipelineHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 
