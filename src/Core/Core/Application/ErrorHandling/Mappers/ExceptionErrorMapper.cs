@@ -43,6 +43,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
         {
             ValidationException validationEx => CreateValidationErrorResponse(validationEx, context),
             BadRequestException badRequestEx => CreateBadRequestErrorResponse(badRequestEx, context),
+            BadHttpRequestException badHttpRequestEx => CreateBadHttpRequestErrorResponse(badHttpRequestEx, context),
             NotFoundException notFoundEx => CreateNotFoundErrorResponse(notFoundEx, context),
             UnauthorizedAccessException unauthorizedEx => CreateUnauthorizedErrorResponse(unauthorizedEx, context),
             InvalidOperationException invalidOpEx => CreateInvalidOperationErrorResponse(invalidOpEx, context),
@@ -70,9 +71,9 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
         };
 
         return ErrorResponse.CreateWithExtensions(
-            title: "Validation Error",
+            title: nameof(ValidationException),
             status: StatusCodes.Status400BadRequest,
-            detail: "One or more validation errors occurred.",
+            detail: exception.Message,
             instance: context.Request.Path,
             traceId: context.TraceIdentifier,
             extensions: extensions
@@ -88,7 +89,24 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Bad Request",
+            title: nameof(BadRequestException),
+            status: StatusCodes.Status400BadRequest,
+            detail: exception.Message,
+            instance: context.Request.Path,
+            traceId: context.TraceIdentifier
+        );
+    }
+
+    /// <summary>
+    /// Creates an error response for bad http request exceptions.
+    /// </summary>
+    private static ErrorResponse CreateBadHttpRequestErrorResponse(
+        BadHttpRequestException exception,
+        HttpContext context
+    )
+    {
+        return ErrorResponse.Create(
+            title: nameof(BadHttpRequestException),
             status: StatusCodes.Status400BadRequest,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -105,7 +123,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Resource Not Found",
+            title: nameof(NotFoundException),
             status: StatusCodes.Status404NotFound,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -122,7 +140,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Unauthorized Access",
+            title: nameof(UnauthorizedAccessException),
             status: StatusCodes.Status401Unauthorized,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -139,7 +157,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Invalid Operation",
+            title: nameof(InvalidOperationException),
             status: StatusCodes.Status400BadRequest,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -156,7 +174,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Invalid Argument",
+            title: nameof(ArgumentException),
             status: StatusCodes.Status400BadRequest,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -173,7 +191,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Internal Server Error",
+            title: nameof(InternalServerException),
             status: StatusCodes.Status500InternalServerError,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -190,7 +208,7 @@ public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) :
     )
     {
         return ErrorResponse.Create(
-            title: "Internal Server Error",
+            title: nameof(Exception),
             status: StatusCodes.Status500InternalServerError,
             detail: exception.Message,
             instance: context.Request.Path,

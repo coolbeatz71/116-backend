@@ -76,10 +76,7 @@ public static class DbSetExtension
         CancellationToken cancellationToken = default
     ) where T : class
     {
-        if (asNoTracking)
-        {
-            query = query.AsNoTracking();
-        }
+        if (asNoTracking) query = query.AsNoTracking();
 
         T? entity = await query.SingleOrDefaultAsync(predicate, cancellationToken);
 
@@ -110,7 +107,7 @@ public static class DbSetExtension
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>The single entity from the query.</returns>
     /// <exception cref="NotFoundException">
-    /// Thrown when the query returns no entity.
+    /// thrown when the query returns no entity.
     /// </exception>
     /// <example>
     /// <code>
@@ -127,10 +124,7 @@ public static class DbSetExtension
         CancellationToken cancellationToken = default
     ) where T : class
     {
-        if (asNoTracking)
-        {
-            query = query.AsNoTracking();
-        }
+        if (asNoTracking) query = query.AsNoTracking();
 
         T? entity = await query.SingleOrDefaultAsync(cancellationToken);
 

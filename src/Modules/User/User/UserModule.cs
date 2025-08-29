@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.Json;
 using _116.Core.Application.Configurations;
 using _116.Core.Infrastructure;
-using _116.Core.Infrastructure.Modules;
 using _116.User.Application.Services;
 using _116.User.Domain.Enums;
 using _116.User.Infrastructure.Persistence;
@@ -79,6 +78,7 @@ public static class UserModule
                 ClockSkew = TimeSpan.Zero
             };
 
+            //TODO: those should be replaced to use the ErrorPipeline handler
             options.Events = new JwtBearerEvents
             {
                 OnChallenge = context =>
@@ -114,18 +114,13 @@ public static class UserModule
 
         // Configure Authorization Policies.
         services.AddAuthorizationBuilder()
-            .AddPolicy("RequireVerifiedUser", policy =>
-                policy.RequireClaim("is_verified", "true"))
-            .AddPolicy("RequireActiveUser", policy =>
-                policy.RequireClaim("is_active", "true"))
-            .AddPolicy("RequireLoggedInUser", policy =>
-                policy.RequireClaim("is_logged_in", "true"))
-            .AddPolicy("LocalAuthOnly", policy =>
-                policy.RequireClaim("auth_provider", nameof(AuthProvider.Local)))
-            .AddPolicy("ExternalAuthOnly", policy =>
-                policy.RequireAssertion(context =>
+            .AddPolicy("RequireVerifiedUser", policy => policy.RequireClaim("is_verified", "true"))
+            .AddPolicy("RequireActiveUser", policy => policy.RequireClaim("is_active", "true"))
+            .AddPolicy("RequireLoggedInUser", policy => policy.RequireClaim("is_logged_in", "true"))
+            .AddPolicy("LocalAuthOnly", policy => policy.RequireClaim("auth_provider", nameof(AuthProvider.Local)))
+            .AddPolicy("ExternalAuthOnly", policy => policy.RequireAssertion(context =>
                 {
-                    var authProvider = context.User.FindFirst("auth_provider")?.Value;
+                    string? authProvider = context.User.FindFirst("auth_provider")?.Value;
                     return authProvider != nameof(AuthProvider.Local);
                 }));
 
