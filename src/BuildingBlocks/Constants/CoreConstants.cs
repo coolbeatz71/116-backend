@@ -1,6 +1,6 @@
 namespace _116.BuildingBlocks.Constants;
 
-public abstract class CoreConstants
+public static class CoreConstants
 {
     /// <summary>
     /// JWT default expiration time (in hours).

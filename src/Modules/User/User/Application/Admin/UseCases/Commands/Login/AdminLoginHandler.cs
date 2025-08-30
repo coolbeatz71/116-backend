@@ -1,13 +1,12 @@
 using _116.Shared.Application.Exceptions;
 using _116.Shared.Contracts.Application.CQRS;
 using _116.User.Application.Services;
+using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
-using _116.User.Domain.DTOs;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Results;
 using _116.User.Domain.ValueObjects;
-using Mapster;
 
 namespace _116.User.Application.Admin.UseCases.Commands.Login;
 
@@ -15,10 +14,12 @@ namespace _116.User.Application.Admin.UseCases.Commands.Login;
 /// Handles the <see cref="AdminLoginCommand"/> to authenticate admin users.
 /// </summary>
 /// <param name="userRepository">Repository for user data access operations.</param>
+/// <param name="roleRepository">Repository for role and permission data operations.</param>
 /// <param name="passwordService">Service for verifying hashed passwords.</param>
 /// <param name="jwtService">Service for generating JWT tokens with admin claims.</param>
 public class AdminLoginHandler(
     IUserRepository userRepository,
+    IRoleRepository roleRepository,
     IPasswordService passwordService,
     IJwtService jwtService
 ) : ICommandHandler<AdminLoginCommand, AdminLoginResult>
@@ -38,7 +39,7 @@ public class AdminLoginHandler(
         // Normalize email using value object
         var email = new Email(command.Email);
 
-        // Get active admin user with all necessary data in one call
+        // Get admin user with all necessary data in one call
         UserEntity user = await userRepository.GetActiveAdminUserWithRolesAndPermissionsAsync(
             email,
             cancellationToken
@@ -72,7 +73,11 @@ public class AdminLoginHandler(
         user.RecordLogin();
         await userRepository.SaveChangesAsync(cancellationToken);
 
-        var userDto = user.Adapt<UserResponseDto>();
+        // Extract roles and permissions using repository
+        var (roles, permissions) = roleRepository.GetUserRolesAndPermissions(user.UserRoles);
+
+        // Map to userDTO
+        var userDto = user.ToUserResponseDto(roles, permissions);
         var authResult = new AuthenticationResult(userDto, token.Token, token.ExpiresAt);
 
         return new AdminLoginResult(authResult);

@@ -65,7 +65,10 @@ public class UserRepository(UserDbContext context) : IUserRepository
         // First, get the user without filtering by IsActive to provide specific error messages
         UserEntity user = await context.Users
             .Where(u => u.Email == email.Value)
-            .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
             .FirstDefaultOrThrowAsync(
                 keyName: "email",
                 keyValue: email.Value,

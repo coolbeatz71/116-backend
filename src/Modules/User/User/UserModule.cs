@@ -4,6 +4,7 @@ using _116.Shared.Infrastructure;
 using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
+using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
 using _116.User.Infrastructure.Repositories;
@@ -56,10 +57,14 @@ public static class UserModule
         // Register the database with base module infrastructure
         services.AddModuleDatabase(GetModuleOptions());
 
+        // Configure Mapster mappings for optimal performance
+        UserMapper.Configure();
+
         // Register user management services
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
 
         // Register data seeder for initial user data population
         services.AddScoped<IDataSeeder, SuperAdminSeeder>();
