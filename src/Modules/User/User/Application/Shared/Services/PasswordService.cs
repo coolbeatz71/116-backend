@@ -42,7 +42,7 @@ public class PasswordService : IPasswordService
     }
 
     /// <inheritdoc />
-    public bool Verify(string password, string hash)
+    public bool Verify(string password, string? hash)
     {
         if (string.IsNullOrWhiteSpace(hash) || !hash.StartsWith("v1:")) return false;
 

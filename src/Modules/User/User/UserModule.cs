@@ -4,6 +4,9 @@ using _116.Shared.Infrastructure;
 using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
+using _116.User.Application.Shared.Repositories;
+using _116.User.Application.Shared.Services;
+using _116.User.Infrastructure.Repositories;
 using _116.User.Infrastructure.Persistence;
 using _116.User.Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -56,6 +59,7 @@ public static class UserModule
         // Register user management services
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         // Register data seeder for initial user data population
         services.AddScoped<IDataSeeder, SuperAdminSeeder>();

@@ -8,14 +8,14 @@ public sealed class AuthenticationException : Exception
     /// <summary>
     /// The reason for authentication failure.
     /// </summary>
-    public string Reason { get; }
+    public string? Reason { get; }
 
     /// <summary>
     /// The authentication scheme that was used.
     /// </summary>
     public string? AuthenticationScheme { get; }
 
-    public AuthenticationException(string message, string reason, string? authenticationScheme = null)
+    public AuthenticationException(string message, string? reason = null, string? authenticationScheme = null)
         : base(message)
     {
         Reason = reason;

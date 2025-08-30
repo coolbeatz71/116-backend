@@ -43,7 +43,7 @@ public record Email
     /// <summary>
     /// Determines whether the specified string is a valid email address.
     /// </summary>
-    /// <param name="email">The email string to validate.</param>
+    /// <param name="email">The email-string to validate.</param>
     /// <returns><c>true</c> if the string is a valid email address; otherwise, <c>false</c>.</returns>
     private static bool IsValidEmail(string email)
     {

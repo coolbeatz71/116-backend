@@ -8,7 +8,7 @@ using _116.User.Domain.Enums;
 using _116.User.Domain.Results;
 using Microsoft.IdentityModel.Tokens;
 
-namespace _116.User.Application.Services;
+namespace _116.User.Application.Shared.Services;
 
 /// <summary>
 /// Service responsible for generating JWT tokens with user claims, roles, and permissions.

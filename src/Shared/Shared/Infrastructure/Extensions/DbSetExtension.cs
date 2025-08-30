@@ -91,7 +91,6 @@ public static class DbSetExtension
         };
     }
 
-
     /// <summary>
     /// Asynchronously returns a single entity from the query or throws a <see cref="NotFoundException"/> if not found.
     /// </summary>
@@ -136,6 +135,54 @@ public static class DbSetExtension
             (not null, not null) => new NotFoundException(entityName, keyName, keyValue),
             (null, not null) => new NotFoundException(entityName, keyValue),
             _ => new NotFoundException($"Could Not find {entityName}.")
+        };
+    }
+
+    /// <summary>
+    /// Asynchronously returns the first entity from the query or throws a <see cref="NotFoundException"/> if no entity is found.
+    /// </summary>
+    /// <typeparam name="T">The type of the entity.</typeparam>
+    /// <param name="query">The queryable source.</param>
+    /// <param name="asNoTracking">Whether to use <c>AsNoTracking()</c> on the query for read-only scenarios.</param>
+    /// <param name="keyName">
+    /// Optional name of the key (e.g., "username", "email") used in the query for more descriptive error messages.
+    /// </param>
+    /// <param name="keyValue">
+    /// Optional value of the key used to identify the missing entity.
+    /// </param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>The first entity from the query.</returns>
+    /// <exception cref="NotFoundException">
+    /// thrown when the query returns no entity.
+    /// </exception>
+    /// <example>
+    /// <code>
+    /// var user = await dbContext.Users
+    ///     .Where(x => x.UserName == "jean.vincent")
+    ///     .FirstOrDefaultOrThrowAsync(keyName: "username", keyValue: "jean.vincent");
+    /// </code>
+    /// </example>
+    public static async Task<T> FirstDefaultOrThrowAsync<T>(
+        this IQueryable<T> query,
+        bool asNoTracking = false,
+        string? keyName = null,
+        object? keyValue = null,
+        CancellationToken cancellationToken = default
+    ) where T : class
+    {
+        if (asNoTracking) query = query.AsNoTracking();
+
+        T? entity = await query.FirstOrDefaultAsync(cancellationToken);
+
+        if (entity is not null) return entity;
+
+        string entityName = typeof(T).Name;
+
+        throw (keyName, keyValue) switch
+        {
+            (not null, not null) => new NotFoundException(entityName, keyName, keyValue),
+            (null, not null) => new NotFoundException(entityName, keyValue),
+            _ => new NotFoundException($"Could not find {entityName}.")
         };
     }
 }

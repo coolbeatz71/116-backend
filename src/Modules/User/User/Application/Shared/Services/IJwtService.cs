@@ -2,7 +2,7 @@ using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
 using _116.User.Domain.Results;
 
-namespace _116.User.Application.Services;
+namespace _116.User.Application.Shared.Services;
 
 /// <summary>
 /// Service interface for JWT token generation and management.

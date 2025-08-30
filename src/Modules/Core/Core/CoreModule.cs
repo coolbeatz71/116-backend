@@ -1,7 +1,6 @@
 using _116.Shared.Infrastructure;
 using _116.Core.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace _116.Core;
