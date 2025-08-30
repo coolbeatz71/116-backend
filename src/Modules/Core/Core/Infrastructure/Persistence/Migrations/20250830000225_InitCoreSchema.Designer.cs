@@ -9,10 +9,10 @@ using _116.Core.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace _116.Core.Infrastructure.Persistence
+namespace _116.Core.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20250829234720_InitCoreSchema")]
+    [Migration("20250830000225_InitCoreSchema")]
     partial class InitCoreSchema
     {
         /// <inheritdoc />

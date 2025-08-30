@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace _116.Core.Infrastructure.Persistence
+namespace _116.Core.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class InitCoreSchema : Migration
