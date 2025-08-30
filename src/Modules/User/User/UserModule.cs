@@ -1,9 +1,11 @@
 using System.Text;
 using _116.Shared.Application.Configurations;
 using _116.Shared.Infrastructure;
+using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
 using _116.User.Infrastructure.Persistence;
+using _116.User.Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +58,7 @@ public static class UserModule
         services.AddScoped<IPasswordService, PasswordService>();
 
         // Register data seeder for initial user data population
-        // services.AddScoped<IDataSeeder, UserDataSeeder>();
+        services.AddScoped<IDataSeeder, SuperAdminSeeder>();
 
         // Configure JWT Authentication
         var (secret, issuer, audience, _) = AppEnvironment.Jwt();
