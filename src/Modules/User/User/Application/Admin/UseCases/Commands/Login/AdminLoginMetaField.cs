@@ -31,10 +31,18 @@ public static class AdminLoginMetaField
              - Login activity tracking
              - Enhanced JWT claims for admin operations
 
-             **Response:**
-             - Returns 200 OK with user info and JWT token on success
-             - Returns 400 Bad Request for invalid credentials
-             - Returns 401 Unauthorized for users without admin privileges
+             **Response Codes:**
+             - Returns 200 OK with user info and JWT token on successful authentication
+             - Returns 400 Bad Request for invalid email format or incorrect password
+             - Returns 401 Unauthorized when user lacks admin privileges (Admin/SuperAdmin role required)
+             - Returns 403 Forbidden when user account is inactive or disabled
+             - Returns 404 Not Found when no user exists with the provided email
+
+             **Error Handling:**
+             - AuthenticationException (401): Missing admin role - user authenticated but lacks Admin/SuperAdmin privileges  
+             - AuthorizationException (403): Account inactive - user exists but account is disabled/suspended
+             - BadRequestException (400): Invalid password - email exists but password is incorrect
+             - NotFoundException (404): User not found - no account exists with the provided email
 
              The returned JWT token includes admin-specific claims for accessing administrative endpoints.
          """

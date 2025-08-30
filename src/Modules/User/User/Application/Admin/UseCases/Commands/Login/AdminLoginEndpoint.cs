@@ -68,6 +68,8 @@ public class AdminLoginEndpoint : ICarterModule
             .ProducesValidationProblem()
             .Produces<AdminLoginResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .Produces(StatusCodes.Status404NotFound);
     }
 }

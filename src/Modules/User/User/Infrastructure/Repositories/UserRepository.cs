@@ -1,6 +1,9 @@
+using _116.BuildingBlocks.Constants;
+using _116.Shared.Application.Exceptions;
 using _116.Shared.Infrastructure.Extensions;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Domain.Entities;
+using _116.User.Domain.Enums;
 using _116.User.Domain.ValueObjects;
 using _116.User.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +57,43 @@ public class UserRepository(UserDbContext context) : IUserRepository
     {
         context.Users.Update(user);
         await context.SaveChangesAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<UserEntity> GetActiveAdminUserWithRolesAndPermissionsAsync(Email email, CancellationToken cancellationToken = default)
+    {
+        // First, get the user without filtering by IsActive to provide specific error messages
+        UserEntity user = await context.Users
+            .Where(u => u.Email == email.Value)
+            .Include(u => u.UserRoles).ThenInclude(ur => ur.Role)
+            .FirstDefaultOrThrowAsync(
+                keyName: "email",
+                keyValue: email.Value,
+                cancellationToken: cancellationToken
+            );
+
+        // Check if the account is active
+        if (!user.IsActive)
+        {
+            throw new AuthorizationException(
+                "Access to the account forbidden.",
+                ExceptionConstants.Authorization.ActiveAccount
+            );
+        }
+
+        // Validate admin privileges
+        bool hasAdminRole = user.UserRoles
+            .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
+
+        if (!hasAdminRole)
+        {
+            throw new AuthenticationException(
+                "Invalid credentials or insufficient privileges.",
+                ExceptionConstants.Authentication.InsufficientRole
+            );
+        }
+
+        return user;
     }
 
     /// <inheritdoc />

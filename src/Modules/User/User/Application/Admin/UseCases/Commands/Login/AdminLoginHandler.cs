@@ -5,7 +5,6 @@ using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
 using _116.User.Domain.DTOs;
 using _116.User.Domain.Entities;
-using _116.User.Domain.Enums;
 using _116.User.Domain.Results;
 using _116.User.Domain.ValueObjects;
 using Mapster;
@@ -30,15 +29,17 @@ public class AdminLoginHandler(
     /// <param name="command">The admin login command containing credentials.</param>
     /// <param name="cancellationToken">Token to cancel the operation.</param>
     /// <returns>An <see cref="AdminLoginResult"/> containing admin authentication information.</returns>
-    /// <exception cref="BadRequestException">Thrown when credentials are invalid or user lacks admin privileges.</exception>
-    /// <exception cref="AuthenticationException">Thrown for users without admin privileges.</exception>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified email.</exception>
+    /// <exception cref="BadRequestException">Thrown when password is invalid.</exception>
+    /// <exception cref="AuthorizationException">Thrown when user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthenticationException">Thrown when user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
     public async Task<AdminLoginResult> Handle(AdminLoginCommand command, CancellationToken cancellationToken)
     {
         // Normalize email using value object
         var email = new Email(command.Email);
 
-        // Get user with roles and permissions for complete authentication
-        UserEntity user = await userRepository.GetUserWithRolesOrThrowAsync(
+        // Get active admin user with all necessary data in one call
+        UserEntity user = await userRepository.GetActiveAdminUserWithRolesAndPermissionsAsync(
             email,
             cancellationToken
         );
@@ -49,16 +50,7 @@ public class AdminLoginHandler(
             throw new BadRequestException("Invalid email or password.");
         }
 
-        // Validate admin privileges - user must have Admin or SuperAdmin role
-        bool hasAdminRole = user.UserRoles
-            .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
-
-        if (!hasAdminRole)
-        {
-            throw new AuthenticationException("Access denied. Administrative privileges required.");
-        }
-
-        // Extract user permissions from roles
+        // Extract user permissions from roles (already loaded by repository)
         List<RolePermissionEntity> userPermissions = user.UserRoles
             .SelectMany(ur => ur.Role.RolePermissions)
             .ToList();

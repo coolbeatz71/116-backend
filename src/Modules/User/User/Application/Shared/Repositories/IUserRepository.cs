@@ -80,6 +80,24 @@ public interface IUserRepository : IRepository<UserEntity>
     Task UpdateAsync(UserEntity user, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves an active admin user with roles and permissions by email address.
+    /// Validates that the user exists, is active, and has administrative privileges.
+    /// </summary>
+    /// <param name="email">The email address to search for.</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>The admin user entity with roles and permissions loaded.</returns>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified email.</exception>
+    /// <exception cref="AuthorizationException">Thrown when user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthenticationException">Thrown when user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
+    /// <remarks>
+    /// This method specifically validates admin privileges and account status with proper HTTP status mapping:
+    /// - AuthorizationException: User exists but account is inactive (403 Forbidden)
+    /// - AuthenticationException: User lacks Admin or SuperAdmin role (401 Unauthorized)
+    /// Use this for admin authentication scenarios to ensure proper error handling.
+    /// </remarks>
+    Task<UserEntity> GetActiveAdminUserWithRolesAndPermissionsAsync(Email email, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Persists all pending changes in the repository to the database.
     /// </summary>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
