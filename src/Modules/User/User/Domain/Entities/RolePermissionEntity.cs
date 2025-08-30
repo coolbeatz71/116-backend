@@ -26,4 +26,21 @@ public class RolePermissionEntity : Aggregate<Guid>
     /// Navigation property for the associated permission.
     /// </summary>
     public PermissionEntity Permission { get; private set; } = null!;
+
+    /// <summary>
+    /// Creates a new role-permission association.
+    /// </summary>
+    /// <param name="id">The unique identifier of the association.</param>
+    /// <param name="roleId">The ID of the role.</param>
+    /// <param name="permissionId">The ID of the permission.</param>
+    /// <returns>A new <see cref="RolePermissionEntity"/> instance.</returns>
+    public static RolePermissionEntity Create(Guid id, Guid roleId, Guid permissionId)
+    {
+        return new RolePermissionEntity
+        {
+            Id = id,
+            RoleId = roleId,
+            PermissionId = permissionId
+        };
+    }
 }

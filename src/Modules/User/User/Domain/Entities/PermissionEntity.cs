@@ -35,4 +35,39 @@ public class PermissionEntity : Aggregate<Guid>
     /// Collection of role-permission associations linked to this permission.
     /// </summary>
     public ICollection<RolePermissionEntity> RolePermissions { get; private set; } = new List<RolePermissionEntity>();
+
+    /// <summary>
+    /// Creates a new permission entity.
+    /// </summary>
+    /// <param name="id">The unique identifier of the permission.</param>
+    /// <param name="resource">The resource name (e.g., "user", "file", "receipt").</param>
+    /// <param name="action">The action name (e.g., "read", "create", "delete").</param>
+    /// <param name="description">The description of the permission's purpose.</param>
+    /// <returns>A new <see cref="PermissionEntity"/> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when parameters are null, empty, or exceed maximum length.</exception>
+    public static PermissionEntity Create(Guid id, string resource, string action, string description)
+    {
+        if (string.IsNullOrWhiteSpace(resource))
+        {
+            throw new ArgumentException("Permission resource is required", nameof(resource));
+        }
+
+        if (string.IsNullOrWhiteSpace(action))
+        {
+            throw new ArgumentException("Permission action is required", nameof(action));
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException("Permission description is required", nameof(description));
+        }
+
+        return new PermissionEntity
+        {
+            Id = id,
+            Resource = resource,
+            Action = action,
+            Description = description
+        };
+    }
 }

@@ -26,4 +26,21 @@ public class UserRoleEntity : Aggregate<Guid>
     /// Navigation property for the associated role.
     /// </summary>
     public RoleEntity Role { get; private set; } = null!;
+
+    /// <summary>
+    /// Creates a new user-role association.
+    /// </summary>
+    /// <param name="id">The unique identifier of the association.</param>
+    /// <param name="userId">The ID of the user.</param>
+    /// <param name="roleId">The ID of the role.</param>
+    /// <returns>A new <see cref="UserRoleEntity"/> instance.</returns>
+    public static UserRoleEntity Create(Guid id, Guid userId, Guid roleId)
+    {
+        return new UserRoleEntity
+        {
+            Id = id,
+            UserId = userId,
+            RoleId = roleId
+        };
+    }
 }
