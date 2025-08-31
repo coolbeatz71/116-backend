@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RootNamespace>_116.Core</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../../../Shared/Shared/Shared.csproj" />
+        <ProjectReference Include="../../../Shared/Shared.Contracts/Shared.Contracts.csproj" />
+        <ProjectReference Include="../../../BuildingBlocks/BuildingBlocks.csproj" />
+    </ItemGroup>
+    
+</Project>

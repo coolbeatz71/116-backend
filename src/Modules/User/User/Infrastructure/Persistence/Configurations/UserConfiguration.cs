@@ -77,8 +77,7 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
 
         // Indexes
         builder.HasIndex(u => u.Email)
-            .IsUnique()
-            .HasFilter("\"Email\" IS NOT NULL"); // Partial index for non-null emails
+            .IsUnique();
 
         builder.HasIndex(u => u.UserName)
             .IsUnique();

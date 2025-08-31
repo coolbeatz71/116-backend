@@ -1,12 +1,17 @@
 using System.Text;
-using _116.Core.Application.Configurations;
-using _116.Core.Infrastructure;
+using _116.Shared.Application.Configurations;
+using _116.Shared.Infrastructure;
+using _116.Shared.Infrastructure.Seed;
+using _116.User.Application.Authorizations.Extensions;
 using _116.User.Application.Services;
-using _116.User.Domain.Enums;
+using _116.User.Application.Shared.Mappers;
+using _116.User.Application.Shared.Repositories;
+using _116.User.Application.Shared.Services;
+using _116.User.Infrastructure.Repositories;
 using _116.User.Infrastructure.Persistence;
+using _116.User.Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -32,7 +37,6 @@ public static class UserModule
     /// Adds the User module's services to the dependency injection container.
     /// </summary>
     /// <param name="services">The service collection to register services into.</param>
-    /// <param name="configuration">The application configuration instance.</param>
     /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
     /// <remarks>
     /// Registers database context with interceptors, authentication services, JWT configuration,
@@ -43,7 +47,7 @@ public static class UserModule
     /// builder.Services.AddUserModule(builder.Configuration);
     /// </code>
     /// </example>
-    public static IServiceCollection AddUserModule(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddUserModule(this IServiceCollection services)
     {
         // Add services to the container.
         // Api Endpoint services.
@@ -51,16 +55,21 @@ public static class UserModule
         // DataSource - Infrastructure services.
 
         // Register the database with base module infrastructure
-        services.AddModuleDatabase(configuration, GetModuleOptions());
+        services.AddModuleDatabase(GetModuleOptions());
 
-        // Register user management services.
+        // Configure Mapster mappings for optimal performance
+        UserMapper.Configure();
+
+        // Register user management services
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPasswordService, PasswordService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRoleRepository, RoleRepository>();
 
-        // Register data seeder for initial user data population.
-        // services.AddScoped<IDataSeeder, UserDataSeeder>();
+        // Register data seeder for initial user data population
+        services.AddScoped<IDataSeeder, SuperAdminSeeder>();
 
-        // Configure JWT Authentication.
+        // Configure JWT Authentication
         var (secret, issuer, audience, _) = AppEnvironment.Jwt();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
@@ -77,19 +86,8 @@ public static class UserModule
             };
         });
 
-        // Configure Authorization Policies.
-        // TODO: should replace this with a more robust setup
-        services.AddAuthorizationBuilder()
-            .AddPolicy("RequireVerifiedUser", policy => policy.RequireClaim("is_verified", "true"))
-            .AddPolicy("RequireActiveUser", policy => policy.RequireClaim("is_active", "true"))
-            .AddPolicy("RequireLoggedInUser", policy => policy.RequireClaim("is_logged_in", "true"))
-            .AddPolicy("LocalAuthOnly", policy => policy.RequireClaim("auth_provider", nameof(AuthProvider.Local)))
-            .AddPolicy("ExternalAuthOnly", policy => policy.RequireAssertion(context =>
-                {
-                    string? authProvider = context.User.FindFirst("auth_provider")?.Value;
-                    return authProvider != nameof(AuthProvider.Local);
-                })
-            );
+        // Configure Authorization using centralized configuration
+        services.AddUserModuleAuthorization();
 
         return services;
     }

@@ -12,9 +12,9 @@
 
     <ItemGroup>
         <ProjectReference Include="../../../BuildingBlocks/BuildingBlocks.csproj" />
-        <ProjectReference Include="../../../Core/Core/Core.csproj" />
-        <ProjectReference Include="../../../Core/Core.Contracts/Core.Contracts.csproj" />
-        <ProjectReference Include="..\..\System\System\System.csproj" />
+        <ProjectReference Include="../../../Shared/Shared/Shared.csproj" />
+        <ProjectReference Include="../../../Shared/Shared.Contracts/Shared.Contracts.csproj" />
+        <ProjectReference Include="../../Core/Core/Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,7 +25,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Infrastructure\Persistence\Configurations\" />
+      <Folder Include="Application\Public\" />
+      <Folder Include="Application\Shared\" />
     </ItemGroup>
 
 </Project>

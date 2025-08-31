@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
-using _116.Core.Domain;
+using _116.Shared.Domain;
 
 namespace _116.User.Domain.Entities;
 
@@ -32,4 +32,32 @@ public class RoleEntity : Aggregate<Guid>
     /// Collection of role-permission associations linking this role to its permissions.
     /// </summary>
     public ICollection<RolePermissionEntity> RolePermissions { get; private set; } = new List<RolePermissionEntity>();
+
+    /// <summary>
+    /// Creates a new role entity.
+    /// </summary>
+    /// <param name="id">The unique identifier of the role.</param>
+    /// <param name="name">The name of the role.</param>
+    /// <param name="description">The description of the role's purpose.</param>
+    /// <returns>A new <see cref="RoleEntity"/> instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when name or description are empty.</exception>
+    public static RoleEntity Create(Guid id, string name, string description)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new ArgumentException("Role name is required", nameof(name));
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            throw new ArgumentException("Role description is required", nameof(description));
+        }
+
+        return new RoleEntity
+        {
+            Id = id,
+            Name = name,
+            Description = description
+        };
+    }
 }

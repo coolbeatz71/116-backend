@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
-using _116.Core.Domain;
+using _116.Shared.Domain;
 using _116.User.Domain.Enums;
 
 namespace _116.User.Domain.Entities;

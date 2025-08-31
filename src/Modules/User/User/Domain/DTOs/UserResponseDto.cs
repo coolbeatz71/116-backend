@@ -1,4 +1,4 @@
-using _116.System.Domain.DTOs;
+using _116.Core.Domain.DTOs;
 using _116.User.Domain.Enums;
 
 namespace _116.User.Domain.DTOs;
@@ -32,7 +32,7 @@ public record UserResponseDto(
     string UserName,
     IReadOnlyCollection<RoleDto> Roles,
     IReadOnlyCollection<PermissionDto> Permissions,
-    AuthProvider AuthProvider,
+    string AuthProvider,
     bool IsVerified,
     bool IsActive,
     bool IsLoggedIn,
@@ -44,6 +44,6 @@ public record UserResponseDto(
     string? CountryDialCode,
     string? PartialPhoneNumber,
     string? FullPhoneNumber,
-    DateTime CreatedAt,
+    DateTime? CreatedAt,
     DateTime? UpdatedAt
 );
