@@ -1,25 +1,23 @@
-using _116.Shared.Application.ErrorHandling.Enums;
+using _116.Shared.Application.Exceptions.Enums;
 
 namespace _116.Shared.Application.Exceptions;
 
 /// <summary>
 /// Exception thrown when JWT token issues occur.
 /// </summary>
-public sealed class JwtTokenException : Exception
+public sealed class JwtTokenException(
+    string message,
+    JwtErrorTypes issue,
+    bool isExpired = false
+) : Exception(message)
 {
     /// <summary>
     /// The specific issue with the JWT token.
     /// </summary>
-    public JwtTokenIssue Issue { get; }
+    public JwtErrorTypes Issue { get; } = issue;
 
     /// <summary>
     /// Whether the token is expired.
     /// </summary>
-    public bool IsExpired { get; }
-
-    public JwtTokenException(string message, JwtTokenIssue issue, bool isExpired = false) : base(message)
-    {
-        Issue = issue;
-        IsExpired = isExpired;
-    }
+    public bool IsExpired { get; } = isExpired;
 }

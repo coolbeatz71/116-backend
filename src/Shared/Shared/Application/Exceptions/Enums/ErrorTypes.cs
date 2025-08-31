@@ -1,7 +1,7 @@
-namespace _116.Shared.Application.ErrorHandling.Enums;
+namespace _116.Shared.Application.Exceptions.Enums;
 
 /// <summary>
-/// Standard error types for consistent error identification across frontend and backend.
+/// Standard error types
 /// </summary>
 public enum ErrorTypes
 {

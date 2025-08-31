@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using _116.Shared.Application.ErrorHandling.Enums;
 
-namespace _116.Shared.Application.ErrorHandling.Models;
+namespace _116.Shared.Application.Exceptions.Entities;
 
 /// <summary>
 /// Represents a standardized error response following RFC 7807 Problem Details specification.
@@ -12,7 +11,7 @@ namespace _116.Shared.Application.ErrorHandling.Models;
 /// and any other error scenarios in the application. It ensures consistent client experience
 /// and proper error correlation through trace identifiers.
 /// </remarks>
-public sealed class ErrorResponse
+public sealed class ErrorResponseEntity
 {
     /// <summary>
     /// A URI reference that identifies the problem type.
@@ -52,7 +51,7 @@ public sealed class ErrorResponse
     /// <summary>
     /// Unique identifier for request tracing and correlation.
     /// </summary>
-    /// <example>"0HMVF3Q2S4V4D:00000001"</example>
+    /// <example>"0HM-VF3Q2S4V4D:00000001"</example>
     [JsonPropertyName("traceId")]
     public required string TraceId { get; init; }
 
@@ -80,13 +79,7 @@ public sealed class ErrorResponse
     /// <summary>
     /// Creates an error response with basic required information.
     /// </summary>
-    /// <param name="title">The error title</param>
-    /// <param name="status">HTTP status code</param>
-    /// <param name="detail">Detailed error message</param>
-    /// <param name="instance">Request path or identifier</param>
-    /// <param name="traceId">Unique trace identifier</param>
-    /// <returns>A new ErrorResponse instance</returns>
-    public static ErrorResponse Create(
+    public static ErrorResponseEntity Create(
         string title,
         int status,
         string detail,
@@ -94,7 +87,7 @@ public sealed class ErrorResponse
         string traceId
     )
     {
-        return new ErrorResponse
+        return new ErrorResponseEntity
         {
             Title = title,
             Status = status,
@@ -108,22 +101,16 @@ public sealed class ErrorResponse
     /// <summary>
     /// Creates an error response with additional extensions.
     /// </summary>
-    /// <param name="title">The error title</param>
-    /// <param name="status">HTTP status code</param>
-    /// <param name="detail">Detailed error message</param>
-    /// <param name="instance">Request path or identifier</param>
-    /// <param name="traceId">Unique trace identifier</param>
-    /// <param name="extensions">Additional error-specific data</param>
-    /// <returns>A new ErrorResponse instance with extensions</returns>
-    public static ErrorResponse CreateWithExtensions(
+    public static ErrorResponseEntity CreateWithExtensions(
         string title,
         int status,
         string detail,
         string instance,
         string traceId,
-        Dictionary<string, object> extensions)
+        Dictionary<string, object> extensions
+    )
     {
-        return new ErrorResponse
+        return new ErrorResponseEntity
         {
             Title = title,
             Status = status,

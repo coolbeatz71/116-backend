@@ -1,9 +1,9 @@
-namespace _116.Shared.Application.ErrorHandling.Enums;
+namespace _116.Shared.Application.Exceptions.Enums;
 
 /// <summary>
 /// Enumeration of possible JWT token issues.
 /// </summary>
-public enum JwtTokenIssue
+public enum JwtErrorTypes
 {
     Missing,
     Invalid,
