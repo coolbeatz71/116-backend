@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using _116.Shared.Application.ErrorHandling.Enums;
 
 namespace _116.Shared.Application.ErrorHandling.Models;
 
@@ -90,7 +91,8 @@ public sealed class ErrorResponse
         int status,
         string detail,
         string instance,
-        string traceId)
+        string traceId
+    )
     {
         return new ErrorResponse
         {

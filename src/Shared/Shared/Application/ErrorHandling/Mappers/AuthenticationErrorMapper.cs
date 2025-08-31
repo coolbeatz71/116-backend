@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Security.Principal;
-using _116.Shared.Application.ErrorHandling.Abstractions;
 using _116.Shared.Application.ErrorHandling.Enums;
+using _116.Shared.Application.ErrorHandling.Mappers.Contracts;
 using _116.Shared.Application.ErrorHandling.Models;
 using _116.Shared.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -12,42 +12,29 @@ namespace _116.Shared.Application.ErrorHandling.Mappers;
 /// <summary>
 /// Maps authentication and authorization errors to structured error responses.
 /// </summary>
-/// <remarks>
-/// This mapper handles JWT authentication failures, authorization denials,
-/// and other authentication-related errors with specialized error responses
-/// that provide appropriate context for client applications.
-/// </remarks>
-public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper> logger) : IErrorMapper
+public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper> logger)
+    : BaseErrorMapper(logger), IErrorMapper<Exception>
 {
-    /// <summary>
-    /// Gets the priority of this mapper (higher than generic exception mapper).
-    /// </summary>
-    public int Priority => 10;
-
-    /// <summary>
-    /// Determines if this mapper can handle the specified error.
-    /// </summary>
-    /// <param name="error">The error to evaluate</param>
-    /// <returns>True if this mapper can handle authentication-related errors</returns>
-    public bool CanHandle(object error)
+    private static readonly Dictionary<Type, (ErrorTypes ErrorType, int StatusCode)> AuthenticationMappings = new()
     {
-        return error switch
-        {
-            UnauthorizedAccessException => true,
-            AuthenticationException => true,
-            AuthorizationException => true,
-            JwtTokenException => true,
-            _ => false
-        };
+        { typeof(UnauthorizedAccessException), (ErrorTypes.AuthenticationFailed, StatusCodes.Status401Unauthorized) },
+        { typeof(AuthenticationException), (ErrorTypes.AuthenticationFailed, StatusCodes.Status401Unauthorized) },
+        { typeof(AuthorizationException), (ErrorTypes.AccessDenied, StatusCodes.Status403Forbidden) },
+        { typeof(JwtTokenException), (ErrorTypes.AuthenticationFailed, StatusCodes.Status401Unauthorized) }
+    };
+
+    public override int Priority => 10;
+
+    public override bool CanHandle(object error) => AuthenticationMappings.ContainsKey(error.GetType());
+
+    public override bool CanHandle(Type errorType) => AuthenticationMappings.ContainsKey(errorType);
+
+    public ErrorResponse MapToErrorResponse(Exception exception, HttpContext context)
+    {
+        return MapToErrorResponse((object)exception, context);
     }
 
-    /// <summary>
-    /// Maps authentication errors to standardized error responses.
-    /// </summary>
-    /// <param name="error">The authentication error to map</param>
-    /// <param name="context">The current HTTP context</param>
-    /// <returns>A structured error response</returns>
-    public ErrorResponse MapToErrorResponse(object error, HttpContext context)
+    protected override ErrorResponse CreateErrorResponse(object error, HttpContext context)
     {
         return error switch
         {
@@ -65,7 +52,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     private ErrorResponse CreateUnauthorizedResponse(UnauthorizedAccessException exception, HttpContext context)
     {
         IIdentity? identity = context.User.Identity;
-        logger.LogWarning(exception,
+        Logger.LogWarning(exception,
             "Unauthorized access attempt for {RequestPath}. User: {User}. Exception: {ExceptionMessage}",
             context.Request.Path,
             identity?.Name ?? "Anonymous",
@@ -80,7 +67,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
         };
 
         return ErrorResponse.CreateWithExtensions(
-            title: "Unauthorized",
+            title: ErrorTypes.AuthenticationFailed.ToString(),
             status: StatusCodes.Status401Unauthorized,
             detail: !string.IsNullOrEmpty(exception.Message)
                 ? exception.Message
@@ -96,7 +83,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     /// </summary>
     private ErrorResponse CreateAuthenticationResponse(AuthenticationException exception, HttpContext context)
     {
-        logger.LogWarning(
+        Logger.LogWarning(
             "Authentication failed for {RequestPath}. Reason: {Reason}",
             context.Request.Path,
             exception.Message
@@ -109,7 +96,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
         };
 
         return ErrorResponse.CreateWithExtensions(
-            title: "Authentication Failed",
+            title: ErrorTypes.AuthenticationFailed.ToString(),
             status: StatusCodes.Status401Unauthorized,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -124,7 +111,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     private ErrorResponse CreateAuthorizationResponse(AuthorizationException exception, HttpContext context)
     {
         IIdentity? identity = context.User.Identity;
-        logger.LogWarning(
+        Logger.LogWarning(
             "Authorization failed for user {User} accessing {RequestPath}. Required: {RequiredPermission}",
             identity?.Name ?? "Anonymous",
             context.Request.Path,
@@ -139,7 +126,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
         };
 
         return ErrorResponse.CreateWithExtensions(
-            title: "Forbidden",
+            title: ErrorTypes.AccessDenied.ToString(),
             status: StatusCodes.Status403Forbidden,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -153,7 +140,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     /// </summary>
     private ErrorResponse CreateJwtTokenResponse(JwtTokenException exception, HttpContext context)
     {
-        logger.LogWarning(
+        Logger.LogWarning(
             "JWT token error for {RequestPath}. Issue: {Issue}",
             context.Request.Path,
             exception.Issue
@@ -176,7 +163,7 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
         };
 
         return ErrorResponse.CreateWithExtensions(
-            title: "Token Error",
+            title: nameof(ErrorTypes.AuthenticationFailed),
             status: statusCode,
             detail: exception.Message,
             instance: context.Request.Path,
@@ -190,14 +177,14 @@ public sealed class AuthenticationErrorMapper(ILogger<AuthenticationErrorMapper>
     /// </summary>
     private ErrorResponse CreateGenericAuthenticationResponse(object error, HttpContext context)
     {
-        logger.LogWarning(
+        Logger.LogWarning(
             "Generic authentication error for {RequestPath}. ErrorType: {ErrorType}",
             context.Request.Path,
             error.GetType().Name
         );
 
         return ErrorResponse.Create(
-            title: "Authentication Error",
+            title: nameof(ErrorTypes.AuthenticationFailed),
             status: StatusCodes.Status401Unauthorized,
             detail: "An authentication error occurred while processing your request.",
             instance: context.Request.Path,

@@ -1,7 +1,7 @@
 using _116.Shared.Application.ErrorHandling.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace _116.Shared.Application.ErrorHandling.Abstractions;
+namespace _116.Shared.Application.ErrorHandling.Mappers.Contracts;
 
 /// <summary>
 /// Defines the contract for mapping specific error types to standardized error responses.
@@ -14,11 +14,18 @@ namespace _116.Shared.Application.ErrorHandling.Abstractions;
 public interface IErrorMapper
 {
     /// <summary>
-    /// Determines whether this mapper can handle the specified error type.
+    /// Determines whether this mapper can handle the specified error object.
     /// </summary>
     /// <param name="error">The error object to evaluate</param>
     /// <returns>True if this mapper can handle the error; otherwise, false</returns>
     bool CanHandle(object error);
+
+    /// <summary>
+    /// Determines whether this mapper can handle the specified error type.
+    /// </summary>
+    /// <param name="errorType">The error type to evaluate</param>
+    /// <returns>True if this mapper can handle the error type; otherwise, false</returns>
+    bool CanHandle(Type errorType);
 
     /// <summary>
     /// Maps the error to a standardized error response.
@@ -67,4 +74,9 @@ public interface IErrorMapper<in TError> : IErrorMapper where TError : class
     /// Implementation of CanHandle for the generic interface.
     /// </summary>
     bool IErrorMapper.CanHandle(object error) => error is TError;
+
+    /// <summary>
+    /// Implementation of CanHandle for the generic interface.
+    /// </summary>
+    bool IErrorMapper.CanHandle(Type errorType) => typeof(TError).IsAssignableFrom(errorType);
 }

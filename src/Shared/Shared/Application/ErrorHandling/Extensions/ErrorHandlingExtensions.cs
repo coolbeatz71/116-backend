@@ -1,6 +1,5 @@
-using _116.Shared.Application.ErrorHandling.Abstractions;
-using _116.Shared.Application.ErrorHandling.Configuration;
 using _116.Shared.Application.ErrorHandling.Mappers;
+using _116.Shared.Application.ErrorHandling.Mappers.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,37 +32,14 @@ public static class ErrorHandlingExtensions
     /// The error mappers are registered with appropriate priorities to ensure specialized
     /// handling takes precedence over generic handling.
     /// </remarks>
-    public static IServiceCollection AddErrorPipelineHandler(this IServiceCollection services)
+    public static void AddErrorPipelineHandler(this IServiceCollection services)
     {
         // Register error mappers in order of priority
         services.AddSingleton<IErrorMapper, AuthenticationErrorMapper>();
         services.AddSingleton<IErrorMapper, ExceptionErrorMapper>();
 
-        // Register the error pipeline handler
-        services.AddSingleton<IErrorHandler, ErrorPipelineHandler>();
-
         // Register as exception handler for ASP.NET Core pipeline
         services.AddExceptionHandler<ErrorPipelineHandler>();
-
-        return services;
-    }
-
-    /// <summary>
-    /// Adds a custom error mapper to the error handling system.
-    /// </summary>
-    /// <typeparam name="TErrorMapper">The type of error mapper to add</typeparam>
-    /// <param name="services">The service collection to add the mapper to</param>
-    /// <returns>The service collection for method chaining</returns>
-    /// <remarks>
-    /// Use this method to add specialized error mappers for domain-specific error types.
-    /// Custom mappers should implement <see cref="IErrorMapper"/> and define appropriate
-    /// priority values to control the order of evaluation.
-    /// </remarks>
-    public static IServiceCollection AddErrorMapper<TErrorMapper>(this IServiceCollection services)
-        where TErrorMapper : class, IErrorMapper
-    {
-        services.AddSingleton<IErrorMapper, TErrorMapper>();
-        return services;
     }
 
     /// <summary>
@@ -80,39 +56,8 @@ public static class ErrorHandlingExtensions
     /// application-specific middleware to ensure security context is available
     /// during error processing.
     /// </remarks>
-    public static IApplicationBuilder UseErrorPipelineHandler(this IApplicationBuilder app)
+    public static void UseErrorPipelineHandler(this IApplicationBuilder app)
     {
         app.UseExceptionHandler(_ => { });
-        return app;
-    }
-
-    /// <summary>
-    /// Adds unified error handling with custom configuration options.
-    /// </summary>
-    /// <param name="services">The service collection to add services to</param>
-    /// <param name="configureOptions">Action to configure error handling options</param>
-    /// <returns>The service collection for method chaining</returns>
-    /// <remarks>
-    /// This overload allows for custom configuration of the error handling system,
-    /// such as adding custom error mappers or configuring logging behavior.
-    /// </remarks>
-    public static IServiceCollection AddErrorPipelineHandler(
-        this IServiceCollection services,
-        Action<ErrorHandlingOptions> configureOptions
-    )
-    {
-        var options = new ErrorHandlingOptions();
-        configureOptions(options);
-
-        // Add default services
-        services.AddErrorPipelineHandler();
-
-        // Add custom mappers if specified
-        foreach (Type mapperType in options.CustomMappers)
-        {
-            services.AddSingleton(typeof(IErrorMapper), mapperType);
-        }
-
-        return services;
     }
 }

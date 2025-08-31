@@ -8,6 +8,5 @@ public enum JwtTokenIssue
     Missing,
     Invalid,
     Expired,
-    Malformed,
-    Unauthorized
+    Malformed
 }

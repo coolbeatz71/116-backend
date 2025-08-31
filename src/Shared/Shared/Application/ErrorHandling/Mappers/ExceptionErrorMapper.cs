@@ -1,4 +1,5 @@
-using _116.Shared.Application.ErrorHandling.Abstractions;
+using _116.Shared.Application.ErrorHandling.Enums;
+using _116.Shared.Application.ErrorHandling.Mappers.Contracts;
 using _116.Shared.Application.ErrorHandling.Models;
 using _116.Shared.Application.Exceptions;
 using FluentValidation;
@@ -8,211 +9,83 @@ using Microsoft.Extensions.Logging;
 namespace _116.Shared.Application.ErrorHandling.Mappers;
 
 /// <summary>
-/// Maps standard exceptions to structured error responses.
+/// Maps standard exceptions to structured error responses using a clean, data-driven approach.
 /// </summary>
-/// <remarks>
-/// This mapper handles common application exceptions including validation errors,
-/// not found exceptions, bad request exceptions, and general system exceptions.
-/// It provides consistent error response formatting and appropriate HTTP status codes.
-/// </remarks>
-public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger) : IErrorMapper<Exception>
+public sealed class ExceptionErrorMapper(ILogger<ExceptionErrorMapper> logger)
+    : BaseErrorMapper(logger), IErrorMapper<Exception>
 {
-    /// <summary>
-    /// Gets the priority of this mapper (0 = default priority).
-    /// </summary>
-    public int Priority => 0;
-
-    /// <summary>
-    /// Maps an exception to a standardized error response.
-    /// </summary>
-    /// <param name="exception">The exception to map</param>
-    /// <param name="context">The current HTTP context</param>
-    /// <returns>A structured error response</returns>
-    public ErrorResponse MapToErrorResponse(
-        Exception exception,
-        HttpContext context
-    )
+    private static readonly Dictionary<Type, (ErrorTypes ErrorType, int StatusCode)> ExceptionMappings = new()
     {
-        logger.LogError(exception,
-            "Exception occurred in {RequestPath}. Exception: {ExceptionType}",
-            context.Request.Path,
-            exception.GetType().Name
-        );
+        { typeof(BadRequestException), (ErrorTypes.BadRequest, StatusCodes.Status400BadRequest) },
+        { typeof(BadHttpRequestException), (ErrorTypes.BadRequest, StatusCodes.Status400BadRequest) },
+        { typeof(NotFoundException), (ErrorTypes.NotFound, StatusCodes.Status404NotFound) },
+        { typeof(UnauthorizedAccessException), (ErrorTypes.AuthenticationFailed, StatusCodes.Status401Unauthorized) },
+        { typeof(InvalidOperationException), (ErrorTypes.BadRequest, StatusCodes.Status400BadRequest) },
+        { typeof(ArgumentException), (ErrorTypes.BadRequest, StatusCodes.Status400BadRequest) },
+        { typeof(InternalServerException), (ErrorTypes.InternalError, StatusCodes.Status500InternalServerError) }
+    };
 
-        return exception switch
+    public override int Priority => 0;
+
+    public override bool CanHandle(object error) => error is Exception;
+
+    public override bool CanHandle(Type errorType) => typeof(Exception).IsAssignableFrom(errorType);
+
+    public ErrorResponse MapToErrorResponse(Exception exception, HttpContext context)
+    {
+        return MapToErrorResponse((object)exception, context);
+    }
+
+    protected override ErrorResponse CreateErrorResponse(object error, HttpContext context)
+    {
+        return error switch
         {
             ValidationException validationEx => CreateValidationErrorResponse(validationEx, context),
-            BadRequestException badRequestEx => CreateBadRequestErrorResponse(badRequestEx, context),
-            BadHttpRequestException badHttpRequestEx => CreateBadHttpRequestErrorResponse(badHttpRequestEx, context),
-            NotFoundException notFoundEx => CreateNotFoundErrorResponse(notFoundEx, context),
-            UnauthorizedAccessException unauthorizedEx => CreateUnauthorizedErrorResponse(unauthorizedEx, context),
-            InvalidOperationException invalidOpEx => CreateInvalidOperationErrorResponse(invalidOpEx, context),
-            ArgumentException argumentEx => CreateArgumentErrorResponse(argumentEx, context),
-            InternalServerException internalServerEx => CreateInternalServerErrorResponse(internalServerEx, context),
-            _ => CreateGenericErrorResponse(exception, context)
+            Exception ex => CreateStandardErrorResponse(ex, context),
+            _ => CreateSimpleErrorResponse(
+                ErrorTypes.InternalError,
+                StatusCodes.Status500InternalServerError,
+                "An unexpected error occurred.",
+                context
+            )
         };
     }
 
-    /// <summary>
-    /// Creates an error response for validation exceptions.
-    /// </summary>
-    private static ErrorResponse CreateValidationErrorResponse(
-        ValidationException exception,
-        HttpContext context
-    )
+    private static ErrorResponse CreateValidationErrorResponse(ValidationException exception, HttpContext context)
     {
-        var extensions = new Dictionary<string, object>
+        Dictionary<string, string[]> validationErrors = exception.Errors
+            .GroupBy(e => e.PropertyName)
+            .ToDictionary(
+                g => g.Key,
+                g => g.Select(e => e.ErrorMessage).ToArray()
+            );
+
+        var extensions = new Dictionary<string, object> { ["errors"] = validationErrors };
+
+        return CreateExtendedErrorResponse(
+            ErrorTypes.ValidationFailed,
+            StatusCodes.Status400BadRequest,
+            exception.Message,
+            context,
+            extensions
+        );
+    }
+
+    private static ErrorResponse CreateStandardErrorResponse(Exception exception, HttpContext context)
+    {
+        Type exceptionType = exception.GetType();
+
+        if (ExceptionMappings.TryGetValue(exceptionType, out (ErrorTypes ErrorType, int StatusCode) mapping))
         {
-            ["errors"] = exception.Errors.GroupBy(e => e.PropertyName)
-                .ToDictionary(
-                    group => group.Key,
-                    group => group.Select(e => e.ErrorMessage).ToArray()
-                )
-        };
+            return CreateSimpleErrorResponse(mapping.ErrorType, mapping.StatusCode, exception.Message, context);
+        }
 
-        return ErrorResponse.CreateWithExtensions(
-            title: nameof(ValidationException),
-            status: StatusCodes.Status400BadRequest,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier,
-            extensions: extensions
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for bad request exceptions.
-    /// </summary>
-    private static ErrorResponse CreateBadRequestErrorResponse(
-        BadRequestException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(BadRequestException),
-            status: StatusCodes.Status400BadRequest,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for bad http request exceptions.
-    /// </summary>
-    private static ErrorResponse CreateBadHttpRequestErrorResponse(
-        BadHttpRequestException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(BadHttpRequestException),
-            status: StatusCodes.Status400BadRequest,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for not found exceptions.
-    /// </summary>
-    private static ErrorResponse CreateNotFoundErrorResponse(
-        NotFoundException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(NotFoundException),
-            status: StatusCodes.Status404NotFound,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for unauthorized access exceptions.
-    /// </summary>
-    private static ErrorResponse CreateUnauthorizedErrorResponse(
-        UnauthorizedAccessException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(UnauthorizedAccessException),
-            status: StatusCodes.Status401Unauthorized,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for invalid operation exceptions.
-    /// </summary>
-    private static ErrorResponse CreateInvalidOperationErrorResponse(
-        InvalidOperationException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(InvalidOperationException),
-            status: StatusCodes.Status400BadRequest,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for argument exceptions.
-    /// </summary>
-    private static ErrorResponse CreateArgumentErrorResponse(
-        ArgumentException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(ArgumentException),
-            status: StatusCodes.Status400BadRequest,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates an error response for internal server exceptions.
-    /// </summary>
-    private static ErrorResponse CreateInternalServerErrorResponse(
-        InternalServerException exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(InternalServerException),
-            status: StatusCodes.Status500InternalServerError,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
-        );
-    }
-
-    /// <summary>
-    /// Creates a generic error response for unhandled exceptions.
-    /// </summary>
-    private static ErrorResponse CreateGenericErrorResponse(
-        Exception exception,
-        HttpContext context
-    )
-    {
-        return ErrorResponse.Create(
-            title: nameof(Exception),
-            status: StatusCodes.Status500InternalServerError,
-            detail: exception.Message,
-            instance: context.Request.Path,
-            traceId: context.TraceIdentifier
+        // Fallback for unmapped exceptions
+        return CreateSimpleErrorResponse(
+            ErrorTypes.InternalError,
+            StatusCodes.Status500InternalServerError,
+            exception.Message,
+            context
         );
     }
 }
