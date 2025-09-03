@@ -7,7 +7,7 @@ namespace _116.Core.Application.Shared.Errors.Messages;
 public static class ValidationErrorMessage
 {
     /// <summary>
-    /// Gets error message for unsupported file type.
+    /// Gets the error message for the unsupported file type.
     /// </summary>
     /// <param name="fileType">The unsupported file type.</param>
     /// <param name="allowedTypes">Array of allowed file types.</param>
@@ -18,7 +18,7 @@ public static class ValidationErrorMessage
     }
 
     /// <summary>
-    /// Gets error message for file too large.
+    /// Gets the error message for the file too large.
     /// </summary>
     /// <param name="fileSize">The actual file size in bytes.</param>
     /// <param name="maxSize">The maximum allowed file size in bytes.</param>
@@ -29,7 +29,7 @@ public static class ValidationErrorMessage
     }
 
     /// <summary>
-    /// Gets error message for corrupted file.
+    /// Gets the error message for the corrupted file.
     /// </summary>
     /// <param name="fileName">The name of the corrupted file.</param>
     /// <returns>A formatted error message indicating the file is corrupted.</returns>
@@ -39,7 +39,7 @@ public static class ValidationErrorMessage
     }
 
     /// <summary>
-    /// Gets error message for invalid configuration.
+    /// Gets the error message for invalid configuration.
     /// </summary>
     /// <param name="configKey">The configuration key that is invalid.</param>
     /// <returns>A formatted error message indicating the configuration is invalid.</returns>
@@ -57,7 +57,7 @@ public static class ValidationErrorMessage
     }
 
     /// <summary>
-    /// Error message indicating that original file name is required.
+    /// Error message indicating that the original file name is required.
     /// </summary>
     public static string OriginalFileNameRequired()
     {

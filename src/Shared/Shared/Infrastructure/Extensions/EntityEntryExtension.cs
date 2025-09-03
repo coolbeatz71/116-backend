@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace _116.Shared.Infrastructure.Extensions;
 
 /// <summary>
-/// Provides extension methods for <see cref="EntityEntry"/> to assist with tracking owned entity changes.
+/// Provides extension methods for <see cref="EntityEntry"/> to help with tracking owned entity changes.
 /// </summary>
 public static class EntityEntryExtension
 {
