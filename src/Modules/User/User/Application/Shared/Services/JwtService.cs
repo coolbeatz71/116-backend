@@ -117,11 +117,6 @@ public class JwtService : IJwtService
 
         var permissionClaims = new List<Claim>();
 
-        // Add individual permission claims for authorization policies
-        permissionClaims.AddRange(
-            permissionsList.Select(p => new Claim(JwtClaimsConstants.Permissions, p))
-        );
-
         // Add permissions as JSON array for frontend consumption
         if (permissionsList.Length > 0)
         {
