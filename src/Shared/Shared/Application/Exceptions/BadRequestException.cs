@@ -16,7 +16,8 @@ public class BadRequestException : Exception
     /// </summary>
     /// <param name="message">The error message that describes the issue.</param>
     /// <param name="details">Additional context or information about the bad request.</param>
-    public BadRequestException(string message, string details) : base(message)
+    public BadRequestException(string message, string details)
+        : base(message)
     {
         Details = details;
     }

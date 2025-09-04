@@ -16,7 +16,8 @@ public class InternalServerException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="details">Additional context or details related to the error.</param>
-    public InternalServerException(string message, string details) : base(message)
+    public InternalServerException(string message, string details)
+        : base(message)
     {
         Details = details;
     }

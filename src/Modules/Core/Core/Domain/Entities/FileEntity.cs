@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
+using _116.Core.Application.Errors;
 using _116.Shared.Domain;
 
 namespace _116.Core.Domain.Entities;
@@ -74,27 +75,27 @@ public class FileEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(fileName))
         {
-            throw new ArgumentNullException(nameof(fileName));
+            throw CoreErrors.BadRequest("File name is required");
         }
 
         if (string.IsNullOrWhiteSpace(originalFileName))
         {
-            throw new ArgumentNullException(nameof(originalFileName));
+            throw CoreErrors.BadRequest("Original file name is required");
         }
 
         if (string.IsNullOrWhiteSpace(mimeType))
         {
-            throw new ArgumentNullException(nameof(mimeType));
+            throw CoreErrors.BadRequest("MIME type is required");
         }
 
         if (string.IsNullOrWhiteSpace(storageUrl))
         {
-            throw new ArgumentNullException(nameof(storageUrl));
+            throw CoreErrors.BadRequest("Storage URL is required");
         }
 
         if (sizeInBytes <= 0)
         {
-            throw new ArgumentException("File size must be greater than zero", nameof(sizeInBytes));
+            throw CoreErrors.BadRequest("File size must be greater than zero");
         }
 
         var file = new FileEntity
@@ -118,7 +119,7 @@ public class FileEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(newStorageUrl))
         {
-            throw new ArgumentException("Storage URL cannot be empty", nameof(newStorageUrl));
+            throw CoreErrors.BadRequest("Storage URL cannot be empty");
         }
 
         StorageUrl = newStorageUrl;

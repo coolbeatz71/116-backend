@@ -1,6 +1,5 @@
-using _116.Shared.Application.Exceptions;
 using _116.Shared.Contracts.Application.CQRS;
-using _116.User.Application.Services;
+using _116.User.Application.Errors;
 using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
@@ -48,7 +47,7 @@ public class AdminLoginHandler(
         // Verify password
         if (!passwordService.Verify(command.Password, user.PasswordHash))
         {
-            throw new BadRequestException("Invalid email or password.");
+            throw UserErrors.InvalidCredentials();
         }
 
         // Extract user permissions from roles (already loaded by repository)

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Domain;
+using _116.User.Application.Errors;
 
 namespace _116.User.Domain.Entities;
 
@@ -49,17 +50,17 @@ public class PermissionEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(resource))
         {
-            throw new ArgumentException("Permission resource is required", nameof(resource));
+            throw UserErrors.BadRequest("Permission resource is required");
         }
 
         if (string.IsNullOrWhiteSpace(action))
         {
-            throw new ArgumentException("Permission action is required", nameof(action));
+            throw UserErrors.BadRequest("Permission action is required");
         }
 
         if (string.IsNullOrWhiteSpace(description))
         {
-            throw new ArgumentException("Permission description is required", nameof(description));
+            throw UserErrors.BadRequest("Permission description is required");
         }
 
         return new PermissionEntity

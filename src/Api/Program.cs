@@ -1,7 +1,6 @@
 using System.Reflection;
 using _116.Shared.Application.Extensions;
 using _116.Core;
-using _116.Shared.Application.Exceptions.Core;
 using Carter;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -66,7 +65,7 @@ builder.Services
         }
     );
 
-builder.Services.AddExceptionPipelineHandler();
+builder.Services.AddGlobalExceptionHandler();
 
 WebApplication app = builder.Build();
 
@@ -74,7 +73,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
-app.UseExceptionPipelineHandler();
+app.UseGlobalExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();

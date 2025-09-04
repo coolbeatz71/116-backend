@@ -59,6 +59,6 @@ public class NotFoundException : Exception
     /// <returns>The cleaned entity name.</returns>
     private static string CleanEntityName(string name)
     {
-        return name.Replace("entity", "", StringComparison.OrdinalIgnoreCase).ToLower().Trim();
+        return name.Replace("entity", "", StringComparison.OrdinalIgnoreCase).Trim();
     }
 }
