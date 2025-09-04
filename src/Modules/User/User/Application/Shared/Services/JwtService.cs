@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Application.Configurations;
 using _116.User.Domain.Entities;
@@ -45,14 +46,13 @@ public class JwtService : IJwtService
             new Claim(ClaimTypes.Name, userName),
             new Claim(ClaimTypes.Email, email),
             new Claim(JwtRegisteredClaimNames.Sub, $"{userId}"),
-            new Claim(JwtRegisteredClaimNames.Email, email),
             new Claim(JwtRegisteredClaimNames.Jti, $"{Guid.NewGuid()}"),
             new Claim(JwtRegisteredClaimNames.Iat, $"{now.ToUnixTimeSeconds()}", ClaimValueTypes.Integer64),
             new Claim(JwtClaimsConstants.AuthProvider, $"{authProvider}")
         };
 
         claims.AddRange(BuildRoleClaims(userRoles));
-        claims.AddRange(BuildPermissionClaims(userPermissions));
+        claims.AddRange(BuildPermissionsClaims(userPermissions));
         claims.AddRange(BuildStatusClaims(isVerified, isActive, isLoggedIn));
 
         int expirationHours = int.TryParse(expiration, out int parsed)
@@ -83,14 +83,14 @@ public class JwtService : IJwtService
     /// <param name="isActive">Whether the user's account is active</param>
     /// <param name="isLoggedIn">Whether the user is currently logged in</param>
     /// <returns>Collection of status claims</returns>
-    private static IEnumerable<Claim> BuildStatusClaims(bool isVerified, bool isActive, bool isLoggedIn)
+    private static List<Claim> BuildStatusClaims(bool isVerified, bool isActive, bool isLoggedIn)
     {
         return new Dictionary<string, bool>
         {
             [JwtClaimsConstants.IsVerified] = isVerified,
             [JwtClaimsConstants.IsActive] = isActive,
             [JwtClaimsConstants.IsLoggedIn] = isLoggedIn
-        }.Select(kvp => new Claim(kvp.Key, kvp.Value ? "true" : "false", ClaimValueTypes.Boolean));
+        }.Select(kvp => new Claim(kvp.Key, kvp.Value ? "true" : "false", ClaimValueTypes.Boolean)).ToList();
     }
 
     /// <summary>
@@ -98,20 +98,42 @@ public class JwtService : IJwtService
     /// </summary>
     /// <param name="userRoles">Collection of user role entities</param>
     /// <returns>Collection of role claims</returns>
-    private static IEnumerable<Claim> BuildRoleClaims(ICollection<UserRoleEntity> userRoles)
+    private static List<Claim> BuildRoleClaims(ICollection<UserRoleEntity> userRoles)
     {
-        return userRoles.Select(r => new Claim(ClaimTypes.Role, r.Role.Name));
+        return userRoles.Select(r => new Claim(ClaimTypes.Role, r.Role.Name)).ToList();
     }
 
     /// <summary>
-    /// Builds permission claims from the user's assigned permissions.
+    /// Builds permission claims from the user's assigned permissions as a JSON array.
     /// </summary>
     /// <param name="permissions">Collection of role permission entities</param>
     /// <returns>Collection of permission claims in the format "resource:action"</returns>
-    private static IEnumerable<Claim> BuildPermissionClaims(ICollection<RolePermissionEntity> permissions)
+    private static List<Claim> BuildPermissionsClaims(ICollection<RolePermissionEntity> permissions)
     {
-        return permissions
+        string[] permissionsList = permissions
             .Select(p => $"{p.Permission.Resource}:{p.Permission.Action}")
-            .Select(v => new Claim(JwtClaimsConstants.Permission, v));
+            .Distinct()
+            .ToArray();
+
+        var permissionClaims = new List<Claim>();
+
+        // Add individual permission claims for authorization policies
+        permissionClaims.AddRange(
+            permissionsList.Select(p => new Claim(JwtClaimsConstants.Permissions, p))
+        );
+
+        // Add permissions as JSON array for frontend consumption
+        if (permissionsList.Length > 0)
+        {
+            permissionClaims.Add(
+                new Claim(
+                    JwtClaimsConstants.Permissions,
+                    JsonSerializer.Serialize(permissionsList),
+                    JsonClaimValueTypes.JsonArray
+                )
+            );
+        }
+
+        return permissionClaims;
     }
 }
