@@ -65,7 +65,7 @@ builder.Services
         }
     );
 
-builder.Services.AddGlobalExceptionHandler();
+builder.Services.AddAppExceptionHandler();
 
 WebApplication app = builder.Build();
 
@@ -73,7 +73,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
-app.UseGlobalExceptionHandler();
+app.UseAppExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();

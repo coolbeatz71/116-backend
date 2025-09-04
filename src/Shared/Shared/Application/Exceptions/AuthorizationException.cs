@@ -16,8 +16,7 @@ public class AuthorizationException : Exception
     /// </summary>
     /// <param name="message">The error message that describes the authorization failure.</param>
     /// <param name="details">Additional context or information about the authorization failure.</param>
-    public AuthorizationException(string message, string details)
-        : base(message)
+    public AuthorizationException(string message, string details) : base(message)
     {
         Details = details;
     }

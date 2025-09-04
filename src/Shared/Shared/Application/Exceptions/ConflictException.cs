@@ -16,8 +16,7 @@ public class ConflictException : Exception
     /// </summary>
     /// <param name="message">The error message that describes the conflict.</param>
     /// <param name="details">Additional context or information about the conflict.</param>
-    public ConflictException(string message, string details)
-        : base(message)
+    public ConflictException(string message, string details) : base(message)
     {
         Details = details;
     }

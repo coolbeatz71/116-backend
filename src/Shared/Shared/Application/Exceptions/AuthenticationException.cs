@@ -16,8 +16,7 @@ public class AuthenticationException : Exception
     /// </summary>
     /// <param name="message">The error message that describes the authentication failure.</param>
     /// <param name="details">Additional context or information about the authentication failure.</param>
-    public AuthenticationException(string message, string details)
-        : base(message)
+    public AuthenticationException(string message, string details) : base(message)
     {
         Details = details;
     }
