@@ -1,8 +1,8 @@
 using _116.BuildingBlocks.Constants;
-using _116.User.Application.Authorizations.Policies;
+using _116.User.Application.Shared.Authorizations.Policies;
 using _116.User.Domain.Enums;
 
-namespace _116.User.Application.Authorizations.Configuration;
+namespace _116.User.Application.Shared.Authorizations.Configuration;
 
 /// <summary>
 /// Centralized configuration for authorization policies in the User module.

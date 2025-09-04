@@ -1,4 +1,4 @@
-namespace _116.User.Application.Authorizations.Policies;
+namespace _116.User.Application.Shared.Authorizations.Policies;
 
 /// <summary>
 /// Defines authorization policy names for user role-based access control.
