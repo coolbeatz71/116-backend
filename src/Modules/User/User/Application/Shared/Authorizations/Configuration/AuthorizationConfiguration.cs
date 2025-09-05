@@ -1,4 +1,4 @@
-namespace _116.User.Application.Authorizations.Configuration;
+namespace _116.User.Application.Shared.Authorizations.Configuration;
 
 /// <summary>
 /// Represents the complete authorization configuration for the User module.

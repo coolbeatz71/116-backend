@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace _116.User.Application.Services;
+namespace _116.User.Application.Shared.Services;
 
 /// <summary>
 /// Implementation of password service using PBKDF2 hashing algorithm with SHA-256.

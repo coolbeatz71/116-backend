@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
+using _116.Core.Application.Shared.Errors;
 using _116.Shared.Domain;
 
 namespace _116.Core.Domain.Entities;
@@ -72,30 +73,15 @@ public class FileEntity : Aggregate<Guid>
         long sizeInBytes
     )
     {
-        if (string.IsNullOrWhiteSpace(fileName))
-        {
-            throw new ArgumentNullException(nameof(fileName));
-        }
+        if (string.IsNullOrWhiteSpace(fileName)) throw CoreErrors.FileNameRequired();
 
-        if (string.IsNullOrWhiteSpace(originalFileName))
-        {
-            throw new ArgumentNullException(nameof(originalFileName));
-        }
+        if (string.IsNullOrWhiteSpace(originalFileName)) throw CoreErrors.OriginalFileNameRequired();
 
-        if (string.IsNullOrWhiteSpace(mimeType))
-        {
-            throw new ArgumentNullException(nameof(mimeType));
-        }
+        if (string.IsNullOrWhiteSpace(mimeType)) throw CoreErrors.MimeTypeRequired();
 
-        if (string.IsNullOrWhiteSpace(storageUrl))
-        {
-            throw new ArgumentNullException(nameof(storageUrl));
-        }
+        if (string.IsNullOrWhiteSpace(storageUrl)) throw CoreErrors.StorageUrlRequired();
 
-        if (sizeInBytes <= 0)
-        {
-            throw new ArgumentException("File size must be greater than zero", nameof(sizeInBytes));
-        }
+        if (sizeInBytes <= 0) throw CoreErrors.FileSizeMustBeGreaterThanZero();
 
         var file = new FileEntity
         {
@@ -116,10 +102,7 @@ public class FileEntity : Aggregate<Guid>
     /// <param name="newStorageUrl">The new storage URL.</param>
     public void UpdateStorageUrl(string newStorageUrl)
     {
-        if (string.IsNullOrWhiteSpace(newStorageUrl))
-        {
-            throw new ArgumentException("Storage URL cannot be empty", nameof(newStorageUrl));
-        }
+        if (string.IsNullOrWhiteSpace(newStorageUrl)) throw CoreErrors.StorageUrlRequired();
 
         StorageUrl = newStorageUrl;
     }

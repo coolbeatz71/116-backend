@@ -1,10 +1,10 @@
-using _116.User.Application.Authorizations.Configuration;
-using _116.User.Application.Authorizations.Handlers;
-using _116.User.Application.Authorizations.Requirements;
+using _116.User.Application.Shared.Authorizations.Configuration;
+using _116.User.Application.Shared.Authorizations.Handlers;
+using _116.User.Application.Shared.Authorizations.Requirements;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace _116.User.Application.Authorizations.Extensions;
+namespace _116.User.Application.Shared.Authorizations.Extensions;
 
 /// <summary>
 /// Provides extension methods for configuring authorization policies and requirements.

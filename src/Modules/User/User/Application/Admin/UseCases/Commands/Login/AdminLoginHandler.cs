@@ -1,6 +1,6 @@
 using _116.Shared.Application.Exceptions;
 using _116.Shared.Contracts.Application.CQRS;
-using _116.User.Application.Services;
+using _116.User.Application.Shared.Errors;
 using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
@@ -32,8 +32,8 @@ public class AdminLoginHandler(
     /// <returns>An <see cref="AdminLoginResult"/> containing admin authentication information.</returns>
     /// <exception cref="NotFoundException">Thrown when no user is found with the specified email.</exception>
     /// <exception cref="BadRequestException">Thrown when password is invalid.</exception>
-    /// <exception cref="AuthorizationException">Thrown when user account is inactive (HTTP 403 Forbidden).</exception>
-    /// <exception cref="AuthenticationException">Thrown when user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthenticationException">Thrown when the user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
     public async Task<AdminLoginResult> Handle(AdminLoginCommand command, CancellationToken cancellationToken)
     {
         // Normalize email using value object
@@ -48,7 +48,7 @@ public class AdminLoginHandler(
         // Verify password
         if (!passwordService.Verify(command.Password, user.PasswordHash))
         {
-            throw new BadRequestException("Invalid email or password.");
+            throw UserErrors.InvalidCredentials();
         }
 
         // Extract user permissions from roles (already loaded by repository)

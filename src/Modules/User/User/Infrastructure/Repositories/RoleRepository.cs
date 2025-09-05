@@ -1,15 +1,14 @@
 using _116.User.Application.Shared.Repositories;
 using _116.User.Domain.DTOs;
 using _116.User.Domain.Entities;
-using _116.User.Infrastructure.Persistence;
 using Mapster;
 
 namespace _116.User.Infrastructure.Repositories;
 
 /// <summary>
-/// Implementation of <see cref="IRoleRepository"/> using Entity Framework Core.
+/// Implementation of <see cref="IRoleRepository"/> for processing user roles and permissions.
 /// </summary>
-public class RoleRepository(UserDbContext context) : IRoleRepository
+public class RoleRepository : IRoleRepository
 {
     /// <inheritdoc />
     public IReadOnlyCollection<RoleDto> GetUserRoles(ICollection<UserRoleEntity> userRoles)

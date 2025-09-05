@@ -1,6 +1,5 @@
-using _116.BuildingBlocks.Constants;
-using _116.Shared.Application.Exceptions;
 using _116.Shared.Infrastructure.Extensions;
+using _116.User.Application.Shared.Errors;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
@@ -76,25 +75,13 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive)
-        {
-            throw new AuthorizationException(
-                "Access to the account forbidden.",
-                ExceptionConstants.Authorization.ActiveAccount
-            );
-        }
+        if (!user.IsActive) throw UserErrors.AccountInactive(email.Value);
 
         // Validate admin privileges
         bool hasAdminRole = user.UserRoles
             .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
 
-        if (!hasAdminRole)
-        {
-            throw new AuthenticationException(
-                "Invalid credentials or insufficient privileges.",
-                ExceptionConstants.Authentication.InsufficientRole
-            );
-        }
+        if (!hasAdminRole) throw UserErrors.InvalidCredentials();
 
         return user;
     }

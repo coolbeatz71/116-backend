@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Domain;
+using _116.User.Application.Shared.Errors;
 using _116.User.Domain.Enums;
 
 namespace _116.User.Domain.Entities;
@@ -126,22 +127,22 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw new ArgumentException("Email is required for local authentication", nameof(email));
+            throw UserErrors.InvalidEmailFormat(email ?? "null");
         }
 
         if (string.IsNullOrWhiteSpace(userName))
         {
-            throw new ArgumentNullException(nameof(userName));
+            throw UserErrors.InvalidUsernameFormat(userName ?? "null");
         }
 
         if (userName.Length > UserConstants.MaxUserNameLength)
         {
-            throw new ArgumentException($"Username cannot exceed {UserConstants.MaxUserNameLength} characters", nameof(userName));
+            throw UserErrors.InvalidUsernameFormat(userName);
         }
 
         if (string.IsNullOrWhiteSpace(passwordHash))
         {
-            throw new ArgumentNullException(nameof(passwordHash));
+            throw UserErrors.InvalidPasswordFormat();
         }
 
         var user = new UserEntity
@@ -176,12 +177,12 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(userName))
         {
-            throw new ArgumentNullException(nameof(userName));
+            throw UserErrors.InvalidUsernameFormat(userName ?? "null");
         }
 
         if (userName.Length > UserConstants.MaxUserNameLength)
         {
-            throw new ArgumentException($"Username cannot exceed {UserConstants.MaxUserNameLength} characters", nameof(userName));
+            throw UserErrors.InvalidUsernameFormat(userName);
         }
 
         var user = new UserEntity
@@ -208,7 +209,7 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(newEmail))
         {
-            throw new ArgumentException("Email is required", nameof(newEmail));
+            throw UserErrors.InvalidEmailFormat(newEmail ?? "null");
         }
 
         Email = newEmail.ToLowerInvariant();
@@ -224,12 +225,12 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(newPasswordHash))
         {
-            throw new ArgumentNullException(nameof(newPasswordHash));
+            throw UserErrors.InvalidPasswordFormat();
         }
 
         if (AuthProvider != AuthProvider.Local && string.IsNullOrEmpty(Email))
         {
-            throw new InvalidOperationException("Cannot update password for a user without email.");
+            throw UserErrors.BadRequest("Cannot update password for a user without email.");
         }
 
         PasswordHash = newPasswordHash;
@@ -275,15 +276,9 @@ public class UserEntity : Aggregate<Guid>
     /// </remarks>
     public void RecordLogin()
     {
-        if (!IsActive)
-        {
-            throw new InvalidOperationException("Cannot login: User account is not active");
-        }
+        if (!IsActive) throw UserErrors.AccountInactive(Email!);
 
-        if (AuthProvider == AuthProvider.Local && !IsVerified)
-        {
-            throw new InvalidOperationException("Cannot login: Email verification required");
-        }
+        if (AuthProvider == AuthProvider.Local && !IsVerified) throw UserErrors.AccountNotVerified(Email!);
 
         IsLoggedIn = UserConstants.LoggedInStatus;
         LastLoginAt = DateTime.UtcNow;
@@ -351,7 +346,7 @@ public class UserEntity : Aggregate<Guid>
 
         if (HasRole(userRole.RoleId))
         {
-            throw new InvalidOperationException("Role is already assigned to this user");
+            throw UserErrors.RoleAlreadyAssignedToUser();
         }
 
         UserRoles.Add(userRole);

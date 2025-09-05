@@ -6,6 +6,11 @@ namespace _116.Shared.Application.Exceptions;
 public class BadRequestException : Exception
 {
     /// <summary>
+    /// Gets additional details about the bad request, if provided.
+    /// </summary>
+    public string? Details { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BadRequestException"/> class with a custom message.
     /// </summary>
     /// <param name="message">The error message that describes the issue.</param>
@@ -20,9 +25,4 @@ public class BadRequestException : Exception
     {
         Details = details;
     }
-
-    /// <summary>
-    /// Gets additional details about the bad request, if provided.
-    /// </summary>
-    public string? Details { get; }
 }

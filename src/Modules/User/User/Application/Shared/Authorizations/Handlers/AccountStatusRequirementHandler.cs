@@ -1,7 +1,7 @@
-using _116.User.Application.Authorizations.Requirements;
+using _116.User.Application.Shared.Authorizations.Requirements;
 using Microsoft.AspNetCore.Authorization;
 
-namespace _116.User.Application.Authorizations.Handlers;
+namespace _116.User.Application.Shared.Authorizations.Handlers;
 
 /// <summary>
 /// Authorization handler that validates account status requirements against user claims.

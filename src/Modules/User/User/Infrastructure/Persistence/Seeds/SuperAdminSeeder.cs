@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 using _116.Shared.Infrastructure.Seed;
-using _116.User.Application.Services;
+using _116.User.Application.Shared.Services;
 using _116.User.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
 

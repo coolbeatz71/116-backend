@@ -1,4 +1,4 @@
-using _116.User.Application.Services;
+using _116.User.Application.Shared.Services;
 using _116.User.Domain.Entities;
 
 namespace _116.User.Infrastructure.Persistence.Seeds;

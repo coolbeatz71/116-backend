@@ -1,5 +1,4 @@
 using System.Reflection;
-using _116.Shared.Application.ErrorHandling.Extensions;
 using _116.Shared.Application.Extensions;
 using _116.Core;
 using Carter;
@@ -66,7 +65,7 @@ builder.Services
         }
     );
 
-builder.Services.AddErrorPipelineHandler();
+builder.Services.AddAppExceptionHandler();
 
 WebApplication app = builder.Build();
 
@@ -74,7 +73,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseSerilogRequestLogging();
-app.UseErrorPipelineHandler();
+app.UseAppExceptionHandler();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapCarter();

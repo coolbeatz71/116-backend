@@ -23,9 +23,7 @@ public static class UserMapper
             .Map(dest => dest.Roles, _ => new List<RoleDto>()) // Default empty collection
             .Map(dest => dest.Permissions, _ => new List<PermissionDto>()) // Default empty collection
             .Map(dest => dest.Avatar, _ => (FileDto?)null) // Null until core file implemented
-            .Map(dest => dest.AuthProvider,
-                src => src.AuthProvider.ToString().ToLowerInvariant()
-            ) // Convert enum to string
+            .Map(dest => dest.AuthProvider, src => src.AuthProvider.ToString()) // Convert enum to string
             .Compile(); // Compile for performance
     }
 

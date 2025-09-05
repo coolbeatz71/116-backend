@@ -45,7 +45,7 @@ public class AdminLoginEndpoint : ICarterModule
     {
         RouteGroupBuilder group = app
             .MapGroup(RouteConstants.V1.Admin.Auth)
-            .WithTags("Admin - Authentication");
+            .WithTags("Admin::authentication");
 
         group.MapPost("/login", async (AdminLoginRequest request, ISender sender) =>
             {

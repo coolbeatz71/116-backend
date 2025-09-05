@@ -26,7 +26,6 @@
 
     <ItemGroup>
       <Folder Include="Application\Public\" />
-      <Folder Include="Application\Shared\" />
     </ItemGroup>
 
 </Project>
