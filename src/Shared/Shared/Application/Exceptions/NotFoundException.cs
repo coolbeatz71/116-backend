@@ -6,6 +6,11 @@ namespace _116.Shared.Application.Exceptions;
 public class NotFoundException : Exception
 {
     /// <summary>
+    /// Gets additional details about the not found error, if provided.
+    /// </summary>
+    public string? Details { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="NotFoundException"/> class with a custom error message.
     /// </summary>
     /// <param name="message">The message that describes the error.</param>
@@ -15,6 +20,16 @@ public class NotFoundException : Exception
     /// </code>
     /// </example>
     public NotFoundException(string message) : base(message) { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NotFoundException"/> class with a custom message and additional details.
+    /// </summary>
+    /// <param name="message">The error message that describes the not found error.</param>
+    /// <param name="details">Additional context or information about the not found error.</param>
+    public NotFoundException(string message, string details) : base(message)
+    {
+        Details = details;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="NotFoundException"/> class with an entity name and a key.

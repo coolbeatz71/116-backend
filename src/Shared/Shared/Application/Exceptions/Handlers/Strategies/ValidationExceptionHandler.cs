@@ -13,7 +13,7 @@ public sealed class ValidationExceptionHandler : BaseExceptionStrategy<Validatio
     /// <inheritdoc />
     public override ProblemDetails CreateProblemDetails(ValidationException exception, HttpContext context)
     {
-        var problemDetails = CreateStandardProblemDetails(
+        ProblemDetails problemDetails = CreateStandardProblemDetails(
             title: nameof(ValidationException),
             detail: exception.Message,
             statusCode: StatusCodes.Status400BadRequest,

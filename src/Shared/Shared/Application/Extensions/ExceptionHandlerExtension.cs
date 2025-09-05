@@ -49,9 +49,7 @@ public static class ExceptionHandlerExtension
         var assembly = Assembly.GetExecutingAssembly();
         List<Type> strategyTypes = assembly
             .GetTypes()
-            .Where(type => type is { IsClass: true, IsAbstract: false } &&
-                             typeof(IExceptionStrategy).IsAssignableFrom(type)
-            )
+            .Where(type => type is { IsClass: true, IsAbstract: false } && typeof(IExceptionStrategy).IsAssignableFrom(type))
             .ToList();
 
         foreach (Type strategyType in strategyTypes)

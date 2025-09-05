@@ -6,6 +6,11 @@ namespace _116.Shared.Application.Exceptions;
 public class InternalServerException : Exception
 {
     /// <summary>
+    /// Gets additional details about the internal server error, if provided.
+    /// </summary>
+    public string? Details { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="InternalServerException"/> class with a custom message.
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
@@ -20,9 +25,4 @@ public class InternalServerException : Exception
     {
         Details = details;
     }
-
-    /// <summary>
-    /// Gets additional details about the internal server error, if provided.
-    /// </summary>
-    public string? Details { get; }
 }

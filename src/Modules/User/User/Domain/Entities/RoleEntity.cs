@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Domain;
-using _116.User.Application.Errors;
+using _116.User.Application.Shared.Errors;
 
 namespace _116.User.Domain.Entities;
 
@@ -46,12 +46,12 @@ public class RoleEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw UserErrors.BadRequest("Role name is required");
+            throw UserErrors.RoleNameRequired();
         }
 
         if (string.IsNullOrWhiteSpace(description))
         {
-            throw UserErrors.BadRequest("Role description is required");
+            throw UserErrors.RoleDescriptionRequired();
         }
 
         return new RoleEntity

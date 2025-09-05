@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using _116.BuildingBlocks.Constants;
 using _116.Shared.Domain;
-using _116.User.Application.Errors;
+using _116.User.Application.Shared.Errors;
 using _116.User.Domain.Enums;
 
 namespace _116.User.Domain.Entities;
@@ -276,15 +276,9 @@ public class UserEntity : Aggregate<Guid>
     /// </remarks>
     public void RecordLogin()
     {
-        if (!IsActive)
-        {
-            throw UserErrors.AccountInactive(Email ?? "unknown");
-        }
+        if (!IsActive) throw UserErrors.AccountInactive(Email!);
 
-        if (AuthProvider == AuthProvider.Local && !IsVerified)
-        {
-            throw UserErrors.AccountNotVerified(Email ?? "unknown");
-        }
+        if (AuthProvider == AuthProvider.Local && !IsVerified) throw UserErrors.AccountNotVerified(Email!);
 
         IsLoggedIn = UserConstants.LoggedInStatus;
         LastLoginAt = DateTime.UtcNow;
@@ -352,7 +346,7 @@ public class UserEntity : Aggregate<Guid>
 
         if (HasRole(userRole.RoleId))
         {
-            throw UserErrors.BadRequest("Role is already assigned to this user");
+            throw UserErrors.RoleAlreadyAssignedToUser();
         }
 
         UserRoles.Add(userRole);

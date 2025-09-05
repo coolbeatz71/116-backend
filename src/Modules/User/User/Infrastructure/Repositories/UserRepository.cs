@@ -1,5 +1,5 @@
 using _116.Shared.Infrastructure.Extensions;
-using _116.User.Application.Errors;
+using _116.User.Application.Shared.Errors;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
@@ -75,19 +75,13 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive)
-        {
-            throw UserErrors.AccountInactive(email.Value);
-        }
+        if (!user.IsActive) throw UserErrors.AccountInactive(email.Value);
 
         // Validate admin privileges
         bool hasAdminRole = user.UserRoles
             .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
 
-        if (!hasAdminRole)
-        {
-            throw UserErrors.InvalidCredentials();
-        }
+        if (!hasAdminRole) throw UserErrors.InvalidCredentials();
 
         return user;
     }
