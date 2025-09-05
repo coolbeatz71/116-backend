@@ -101,4 +101,19 @@ public static class UserConstants
     /// Maximum allowed length for full phone numbers.
     /// </summary>
     public const int MaxFullPhoneNumberLength = 20;
+
+    /// <summary>
+    /// OTP expiration time in minutes.
+    /// </summary>
+    public const int OtpExpirationMinutes = 60;
+
+    /// <summary>
+    /// Maximum number of OTP verification attempts.
+    /// </summary>
+    public const int MaxOtpAttempts = 3;
+
+    /// <summary>
+    /// Length of generated OTP codes.
+    /// </summary>
+    public const int OtpCodeLength = 6;
 }
