@@ -58,6 +58,33 @@ public interface IUserRepository : IRepository<UserEntity>
     Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Validates that both email and username are unique for user registration.
+    /// </summary>
+    /// <param name="email">The email address to check for uniqueness.</param>
+    /// <param name="userName">The username to check for uniqueness.</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous validation operation.</returns>
+    /// <exception cref="ConflictException">Thrown when email or username already exists.</exception>
+    /// <remarks>
+    /// This method performs both email and username uniqueness validation in a single database operation.
+    /// It throws specific conflict exceptions for email or username conflicts.
+    /// </remarks>
+    Task ValidateUniqueCredentialsAsync(Email email, string userName, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Assigns the Visitor role to a new user during registration.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <exception cref="NotFoundException">Thrown when the Visitor role is not found in the system.</exception>
+    /// <remarks>
+    /// This method automatically assigns the default Visitor role to new users.
+    /// Should be called as part of the user registration process.
+    /// </remarks>
+    Task AssignVisitorRoleAsync(Guid userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Adds a new user entity to the repository.
     /// </summary>
     /// <param name="user">The user entity to add.</param>

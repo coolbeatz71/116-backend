@@ -75,13 +75,19 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive) throw UserErrors.AccountInactive(email.Value);
+        if (!user.IsActive)
+        {
+            throw UserErrors.AccountInactive(email.Value);
+        }
 
         // Validate admin privileges
         bool hasAdminRole = user.UserRoles
             .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
 
-        if (!hasAdminRole) throw UserErrors.InvalidCredentials();
+        if (!hasAdminRole)
+        {
+            throw UserErrors.InvalidCredentials();
+        }
 
         return user;
     }
@@ -106,7 +112,10 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive) throw UserErrors.AccountInactive(user.Email!);
+        if (!user.IsActive)
+        {
+            throw UserErrors.AccountInactive(user.Email!);
+        }
 
         // Check if the account is verified (for local auth)
         if (user is { AuthProvider: AuthProvider.Local, IsVerified: false })
@@ -115,6 +124,48 @@ public class UserRepository(UserDbContext context) : IUserRepository
         }
 
         return user;
+    }
+
+    /// <inheritdoc />
+    public async Task ValidateUniqueCredentialsAsync(Email email, string userName, CancellationToken cancellationToken = default)
+    {
+        // Check for existing email and username in parallel
+        Task<bool> emailExists = context.Users.AnyAsync(u => u.Email == email.Value, cancellationToken);
+        Task<bool> usernameExists = context.Users.AnyAsync(u => u.UserName == userName, cancellationToken);
+
+        await Task.WhenAll(emailExists, usernameExists);
+
+        if (emailExists.Result)
+        {
+            throw UserErrors.EmailAlreadyExists(email.Value);
+        }
+
+        if (usernameExists.Result)
+        {
+            throw UserErrors.UsernameAlreadyExists(userName);
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task AssignVisitorRoleAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        // Find the user
+        UserEntity? user = await context.Users.FindAsync([userId], cancellationToken);
+
+        // Find the Visitor role
+        RoleEntity? visitorRole = await context.Roles
+            .FirstOrDefaultAsync(r => r.Name == nameof(CoreUserRole.Visitor), cancellationToken);
+
+        if (visitorRole == null)
+        {
+            throw UserErrors.RoleNotFoundByName(nameof(CoreUserRole.Visitor));
+        }
+
+        // Create user-role association using the static factory method
+        var userRole = UserRoleEntity.Create(Guid.NewGuid(), userId, visitorRole.Id);
+
+        // Use the domain method to assign the role
+        user?.AssignRole(userRole);
     }
 
     /// <inheritdoc />
