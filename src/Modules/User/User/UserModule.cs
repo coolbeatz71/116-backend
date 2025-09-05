@@ -1,8 +1,10 @@
 using System.Text;
 using _116.Shared.Application.Configurations;
+using _116.Shared.Application.Exceptions.Handlers.Contracts;
 using _116.Shared.Infrastructure;
 using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Shared.Authorizations.Extensions;
+using _116.User.Application.Shared.Exceptions.Handlers;
 using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
@@ -87,6 +89,10 @@ public static class UserModule
 
         // Configure Authorization using centralized configuration
         services.AddUserModuleAuthorization();
+
+        // Register custom exception handlers for this module
+        services.AddSingleton<IExceptionStrategy, AccountInactiveExceptionHandler>();
+        services.AddSingleton<IExceptionStrategy, AccountNotVerifiedExceptionHandler>();
 
         return services;
     }

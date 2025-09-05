@@ -1,5 +1,6 @@
 using _116.Shared.Application.Exceptions;
 using _116.User.Application.Shared.Errors.Messages;
+using _116.User.Application.Shared.Exceptions;
 
 namespace _116.User.Application.Shared.Errors;
 
@@ -54,13 +55,13 @@ public static class UserErrors
     /// <summary>
     /// Throws when the account is inactive.
     /// </summary>
-    public static AuthorizationException AccountInactive(string email) =>
+    public static AccountInactiveException AccountInactive(string email) =>
         new(AuthorizationErrorMessage.AccountInactive(email));
 
     /// <summary>
     /// Throws when the account is not verified.
     /// </summary>
-    public static AuthorizationException AccountNotVerified(string email) =>
+    public static AccountNotVerifiedException AccountNotVerified(string email) =>
         new(AuthorizationErrorMessage.AccountNotVerified(email));
 
     /// <summary>

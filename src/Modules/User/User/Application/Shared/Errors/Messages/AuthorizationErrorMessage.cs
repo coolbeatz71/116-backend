@@ -16,7 +16,7 @@ public static class AuthorizationErrorMessage
     /// </returns>
     public static string AccountInactive(string email)
     {
-        return $"Account for '{email}' is disabled";
+        return $"Account associated with '{email}' is inactive. Please contact support for assistance.";
     }
 
     /// <summary>
@@ -28,6 +28,6 @@ public static class AuthorizationErrorMessage
     /// </returns>
     public static string AccountNotVerified(string email)
     {
-        return $"Account for '{email}' is not verified";
+        return $"The account associated with '{email}' is not verified. Please complete the verification process to continue.";
     }
 }
