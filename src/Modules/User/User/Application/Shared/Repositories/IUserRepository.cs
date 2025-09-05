@@ -40,7 +40,7 @@ public interface IUserRepository : IRepository<UserEntity>
     /// </summary>
     /// <param name="email">The email address to check for existence.</param>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
-    /// <returns>True if a user exists with the email; otherwise, false.</returns>
+    /// <returns>True if a user exists with the email, otherwise, false.</returns>
     /// <remarks>
     /// This method is useful for email uniqueness validation during user registration.
     /// </remarks>
@@ -51,7 +51,7 @@ public interface IUserRepository : IRepository<UserEntity>
     /// </summary>
     /// <param name="userName">The username to check for existence.</param>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
-    /// <returns>True if a user exists with the username; otherwise, false.</returns>
+    /// <returns>True if a user exists with the username, otherwise, false.</returns>
     /// <remarks>
     /// This method is useful for username uniqueness validation during user registration.
     /// </remarks>
@@ -87,15 +87,33 @@ public interface IUserRepository : IRepository<UserEntity>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
     /// <returns>The admin user entity with roles and permissions loaded.</returns>
     /// <exception cref="NotFoundException">Thrown when no user is found with the specified email.</exception>
-    /// <exception cref="AuthorizationException">Thrown when user account is inactive (HTTP 403 Forbidden).</exception>
-    /// <exception cref="AuthenticationException">Thrown when user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthenticationException">Thrown when the user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
     /// <remarks>
     /// This method specifically validates admin privileges and account status with proper HTTP status mapping:
-    /// - AuthorizationException: User exists but account is inactive (403 Forbidden)
+    /// - AuthorizationException: User exists but the account is inactive (403 Forbidden)
     /// - AuthenticationException: User lacks Admin or SuperAdmin role (401 Unauthorized)
     /// Use this for admin authentication scenarios to ensure proper error handling.
     /// </remarks>
     Task<UserEntity> GetActiveAdminUserWithRolesAndPermissionsAsync(Email email, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves an active public user with roles and permissions by credentials (email or username).
+    /// Validates that the user exists and is active for public authentication.
+    /// </summary>
+    /// <param name="credentials">The credentials to search for (email or username).</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>The public user entity with roles and permissions loaded.</returns>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified credentials.</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is not verified (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method accepts either email address or username as credentials for public user authentication.
+    /// It validates account status with proper HTTP status mapping:
+    /// - AuthorizationException: User exists but the account is inactive or not verified (403 Forbidden)
+    /// Use this for public user authentication scenarios to ensure proper error handling.
+    /// </remarks>
+    Task<UserEntity> GetActivePublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Persists all pending changes in the repository to the database.
