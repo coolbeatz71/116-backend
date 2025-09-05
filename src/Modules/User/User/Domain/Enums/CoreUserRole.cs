@@ -60,8 +60,8 @@ public enum CoreUserRole
     /// <item>articles.read</item>
     /// <item>videos.read</item>
     /// <item>contents.read</item>
-    /// <item>profile.read</item>
-    /// <item>profile.update</item>
+    /// <item>own_profile.read</item>
+    /// <item>own_profile.update</item>
     /// <item>likes.create</item>
     /// <item>own_likes.delete</item>
     /// <item>likes.read</item>
