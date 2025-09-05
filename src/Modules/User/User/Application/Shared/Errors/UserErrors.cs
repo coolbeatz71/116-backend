@@ -40,7 +40,7 @@ public static class UserErrors
         new("Role", roleId);
 
     /// <summary>
-    /// Throws when a role is not found by name.
+    /// Throws when a role is not found using the name.
     /// </summary>
     public static NotFoundException RoleNotFoundByName(string roleName) =>
         new("Role", "name", roleName);

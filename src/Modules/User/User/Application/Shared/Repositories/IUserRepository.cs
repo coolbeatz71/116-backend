@@ -110,7 +110,7 @@ public interface IUserRepository : IRepository<UserEntity>
     /// <remarks>
     /// This method accepts either email address or username as credentials for public user authentication.
     /// It validates account status with proper HTTP status mapping:
-    /// - AuthorizationException: User exists but the account is inactive or not verified (403 Forbidden)
+    /// - AuthorizationException: User exists, but the account is inactive or not verified (403 Forbidden)
     /// Use this for public user authentication scenarios to ensure proper error handling.
     /// </remarks>
     Task<UserEntity> GetActivePublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default);

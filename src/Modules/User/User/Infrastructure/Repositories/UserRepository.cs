@@ -109,8 +109,10 @@ public class UserRepository(UserDbContext context) : IUserRepository
         if (!user.IsActive) throw UserErrors.AccountInactive(user.Email!);
 
         // Check if the account is verified (for local auth)
-        if (user.AuthProvider == Domain.Enums.AuthProvider.Local && !user.IsVerified)
+        if (user is { AuthProvider: AuthProvider.Local, IsVerified: false })
+        {
             throw UserErrors.AccountNotVerified(user.Email!);
+        }
 
         return user;
     }
