@@ -87,6 +87,35 @@ public class UserRepository(UserDbContext context) : IUserRepository
     }
 
     /// <inheritdoc />
+    public async Task<UserEntity> GetActivePublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default)
+    {
+        // Check if credentials is an email (contains @ and .) or username
+        bool isEmail = credentials.Contains('@') && credentials.Contains('.');
+
+        // Get the user by email or username without filtering by IsActive to provide specific error messages
+        UserEntity user = await context.Users
+            .Where(u => isEmail ? u.Email == credentials : u.UserName == credentials)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
+            .FirstDefaultOrThrowAsync(
+                keyName: "credentials",
+                keyValue: credentials,
+                cancellationToken: cancellationToken
+            );
+
+        // Check if the account is active
+        if (!user.IsActive) throw UserErrors.AccountInactive(user.Email!);
+
+        // Check if the account is verified (for local auth)
+        if (user.AuthProvider == Domain.Enums.AuthProvider.Local && !user.IsVerified)
+            throw UserErrors.AccountNotVerified(user.Email!);
+
+        return user;
+    }
+
+    /// <inheritdoc />
     public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         await context.SaveChangesAsync(cancellationToken);
