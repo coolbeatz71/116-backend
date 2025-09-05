@@ -6,9 +6,19 @@ namespace _116.BuildingBlocks.Constants;
 public static class UserConstants
 {
     /// <summary>
+    /// Minimum allowed length for the username.
+    /// </summary>
+    public const int MinUserNameLength = 3;
+
+    /// <summary>
     /// Maximum allowed length for username.
     /// </summary>
     public const int MaxUserNameLength = 20;
+
+    /// <summary>
+    /// Minimum allowed length for the password.
+    /// </summary>
+    public const int MinPasswordLength = 6;
 
     /// <summary>
     /// Default verification status for new local authentication users.
