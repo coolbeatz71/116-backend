@@ -7,7 +7,7 @@ namespace _116.Core.Application.Shared.Errors.Messages;
 public static class InternalServerErrorMessage
 {
     /// <summary>
-    /// Gets error message for service unavailable.
+    /// Gets the error message for service unavailable.
     /// </summary>
     /// <param name="serviceName">The name of the unavailable service.</param>
     /// <returns>A formatted error message indicating the service is unavailable.</returns>
