@@ -69,7 +69,7 @@ public class PublicSignUpHandler(
         await userRepository.SaveChangesAsync(cancellationToken);
 
         // Get the newly created user with roles to generate token
-        UserEntity userWithRoles = await userRepository.GetActivePublicUserWithRolesAndPermissionsAsync(
+        UserEntity userWithRoles = await userRepository.GetPublicUserWithRolesAndPermissionsAsync(
             email.Value,
             cancellationToken
         );

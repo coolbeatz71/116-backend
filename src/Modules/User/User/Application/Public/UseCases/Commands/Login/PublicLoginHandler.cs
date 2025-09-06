@@ -34,17 +34,21 @@ public class PublicLoginHandler(
     /// <exception cref="AuthorizationException">Thrown when the user account is inactive or not verified (HTTP 403 Forbidden).</exception>
     public async Task<PublicLoginResult> Handle(PublicLoginCommand command, CancellationToken cancellationToken)
     {
-        // Get public user with all necessary data in one call
-        UserEntity user = await userRepository.GetActivePublicUserWithRolesAndPermissionsAsync(
+        // Get user with roles/permissions without status checks
+        UserEntity user = await userRepository.GetPublicUserWithRolesAndPermissionsAsync(
             command.Credentials,
             cancellationToken
         );
 
-        // Verify password
+        // Verify password first before revealing account status
         if (!passwordService.Verify(command.Password, user.PasswordHash))
         {
             throw UserErrors.InvalidCredentials();
         }
+
+        // Check account status after password verification
+        userRepository.IsUserAccountActive(user);
+        userRepository.IsUserAccountVerified(user);
 
         // Extract user permissions from roles (already loaded by repository)
         List<RolePermissionEntity> userPermissions = user.UserRoles

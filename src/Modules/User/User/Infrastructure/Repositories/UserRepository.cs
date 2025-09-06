@@ -75,10 +75,7 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive)
-        {
-            throw UserErrors.AccountInactive(email.Value);
-        }
+        IsUserAccountActive(user);
 
         // Validate admin privileges
         bool hasAdminRole = user.UserRoles
@@ -90,6 +87,46 @@ public class UserRepository(UserDbContext context) : IUserRepository
         }
 
         return user;
+    }
+
+    /// <inheritdoc />
+    public async Task<UserEntity> GetPublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default)
+    {
+        // Check if credentials is an email (contains @ and .) or username
+        bool isEmail = credentials.Contains('@') && credentials.Contains('.');
+
+        // Get the user by email or username without any status checks
+        return await context.Users
+            .Where(u => isEmail ? u.Email == credentials : u.UserName == credentials)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
+            .FirstDefaultOrThrowAsync(
+                keyName: "credentials",
+                keyValue: credentials,
+                cancellationToken: cancellationToken
+            );
+    }
+
+    /// <inheritdoc />
+    public bool IsUserAccountActive(UserEntity user)
+    {
+        if (!user.IsActive)
+        {
+            throw UserErrors.AccountInactive(user.Email!);
+        }
+        return true;
+    }
+
+    /// <inheritdoc />
+    public bool IsUserAccountVerified(UserEntity user)
+    {
+        if (user is { AuthProvider: AuthProvider.Local, IsVerified: false })
+        {
+            throw UserErrors.AccountNotVerified(user.Email!);
+        }
+        return true;
     }
 
     /// <inheritdoc />
@@ -112,16 +149,10 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive)
-        {
-            throw UserErrors.AccountInactive(user.Email!);
-        }
+        IsUserAccountActive(user);
 
         // Check if the account is verified (for local auth)
-        if (user is { AuthProvider: AuthProvider.Local, IsVerified: false })
-        {
-            throw UserErrors.AccountNotVerified(user.Email!);
-        }
+        IsUserAccountVerified(user);
 
         return user;
     }

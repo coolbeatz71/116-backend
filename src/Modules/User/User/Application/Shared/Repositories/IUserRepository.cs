@@ -125,6 +125,45 @@ public interface IUserRepository : IRepository<UserEntity>
     Task<UserEntity> GetActiveAdminUserWithRolesAndPermissionsAsync(Email email, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Retrieves a public user with roles and permissions by credentials (email or username).
+    /// Only validates that the user exists - does not check verification or account status.
+    /// </summary>
+    /// <param name="credentials">The credentials to search for (email or username).</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>The public user entity with roles and permissions loaded.</returns>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified credentials.</exception>
+    /// <remarks>
+    /// This method accepts either email address or username as credentials.
+    /// It does not perform account status or verification checks - use this when you need to
+    /// validate credentials first before checking account status.
+    /// </remarks>
+    Task<UserEntity> GetPublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Validates that a user account is active.
+    /// </summary>
+    /// <param name="user">The user entity to validate.</param>
+    /// <returns>True if the account is active, otherwise throws an exception.</returns>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method should be called after password verification to ensure account status
+    /// is only revealed for valid credentials.
+    /// </remarks>
+    bool IsUserAccountActive(UserEntity user);
+
+    /// <summary>
+    /// Validates that a user account is verified for local authentication.
+    /// </summary>
+    /// <param name="user">The user entity to validate.</param>
+    /// <returns>True if the account is verified or not using local auth, otherwise throws an exception.</returns>
+    /// <exception cref="AuthorizationException">Thrown when the local account is not verified (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method should be called after password verification to ensure verification status
+    /// is only revealed for valid credentials. Only applies to local authentication provider.
+    /// </remarks>
+    bool IsUserAccountVerified(UserEntity user);
+
+    /// <summary>
     /// Retrieves an active public user with roles and permissions by credentials (email or username).
     /// Validates that the user exists and is active for public authentication.
     /// </summary>
