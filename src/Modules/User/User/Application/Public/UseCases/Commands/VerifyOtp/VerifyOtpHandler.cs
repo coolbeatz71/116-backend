@@ -1,9 +1,9 @@
+using _116.Shared.Application.Exceptions;
 using _116.Shared.Contracts.Application.CQRS;
 using _116.User.Application.Shared.Errors;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Domain.Entities;
 using _116.User.Domain.Enums;
-using _116.User.Domain.Results;
 using _116.User.Domain.ValueObjects;
 
 namespace _116.User.Application.Public.UseCases.Commands.VerifyOtp;

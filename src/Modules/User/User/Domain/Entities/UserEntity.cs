@@ -127,15 +127,10 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            throw UserErrors.InvalidEmailFormat(email ?? "null");
+            throw UserErrors.InvalidEmailFormat(email);
         }
 
-        if (string.IsNullOrWhiteSpace(userName))
-        {
-            throw UserErrors.InvalidUsernameFormat(userName ?? "null");
-        }
-
-        if (userName.Length > UserConstants.MaxUserNameLength)
+        if (string.IsNullOrWhiteSpace(userName) || userName.Length > UserConstants.MaxUserNameLength)
         {
             throw UserErrors.InvalidUsernameFormat(userName);
         }
@@ -175,12 +170,7 @@ public class UserEntity : Aggregate<Guid>
     /// </remarks>
     public static UserEntity CreateExternal(Guid id, string userName, AuthProvider authProvider, string? email = null)
     {
-        if (string.IsNullOrWhiteSpace(userName))
-        {
-            throw UserErrors.InvalidUsernameFormat(userName ?? "null");
-        }
-
-        if (userName.Length > UserConstants.MaxUserNameLength)
+        if (string.IsNullOrWhiteSpace(userName) || userName.Length > UserConstants.MaxUserNameLength)
         {
             throw UserErrors.InvalidUsernameFormat(userName);
         }
@@ -209,7 +199,7 @@ public class UserEntity : Aggregate<Guid>
     {
         if (string.IsNullOrWhiteSpace(newEmail))
         {
-            throw UserErrors.InvalidEmailFormat(newEmail ?? "null");
+            throw UserErrors.InvalidEmailFormat(newEmail);
         }
 
         Email = newEmail.ToLowerInvariant();

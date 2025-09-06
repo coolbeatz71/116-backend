@@ -125,7 +125,7 @@ public static class UserErrors
         new(message);
 
     /// <summary>
-    /// Throws when user account is already verified.
+    /// Throws when the user account is already verified.
     /// </summary>
     public static ConflictException AccountAlreadyVerified() =>
         new(ValidationErrorMessage.AccountAlreadyVerified());
