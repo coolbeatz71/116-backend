@@ -54,7 +54,11 @@ public class PublicSignUpEndpoint : ICarterModule
         group.MapPost("/signup", async (PublicSignUpRequest request, ISender sender) =>
             {
                 // Send the command to register the public user
-                var command = new PublicSignUpCommand(request.UserName, request.Email, request.Password);
+                var command = new PublicSignUpCommand(
+                    Email: request.Email,
+                    UserName: request.UserName,
+                    Password: request.Password
+                );
                 PublicSignUpResult result = await sender.Send(command);
 
                 // Adapt the result to the response type

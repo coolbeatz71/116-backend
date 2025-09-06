@@ -20,6 +20,11 @@ public partial class PublicSignUpValidator : AbstractValidator<PublicSignUpComma
     /// </summary>
     public PublicSignUpValidator()
     {
+        // Email validation
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required")
+            .EmailAddress().WithMessage("Invalid email format");
+
         // Username validation - alphanumeric with spaces and hyphens, min 3 chars
         RuleFor(x => x.UserName)
             .NotEmpty().WithMessage("Username is required")
@@ -29,11 +34,6 @@ public partial class PublicSignUpValidator : AbstractValidator<PublicSignUpComma
             .WithMessage($"Username cannot exceed {UserConstants.MaxUserNameLength} characters")
             .Matches(UsernameRegex())
             .WithMessage("Username can only contain letters, numbers, spaces, and hyphens");
-
-        // Email validation
-        RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required")
-            .EmailAddress().WithMessage("Invalid email format");
 
         // Password validation - strong password requirements
         RuleFor(x => x.Password)
@@ -55,6 +55,6 @@ public partial class PublicSignUpValidator : AbstractValidator<PublicSignUpComma
     /// Generated regex for password validation - at least one lowercase, one uppercase, and one number.
     /// Uses compile-time generation for better performance, AOT compatibility, and reduced startup time.
     /// </summary>
-    [GeneratedRegex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])")]
+    [GeneratedRegex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])")]
     private static partial Regex PasswordRegex();
 }
