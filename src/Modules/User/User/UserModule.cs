@@ -68,6 +68,8 @@ public static class UserModule
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IOtpRepository, OtpRepository>();
 
         // Register data seeder for initial user data population
         services.AddScoped<IDataSeeder, SuperAdminSeeder>();
