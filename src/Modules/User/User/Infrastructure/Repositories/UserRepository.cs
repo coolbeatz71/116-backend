@@ -129,18 +129,16 @@ public class UserRepository(UserDbContext context) : IUserRepository
     /// <inheritdoc />
     public async Task ValidateUniqueCredentialsAsync(Email email, string userName, CancellationToken cancellationToken = default)
     {
-        // Check for existing email and username in parallel
-        Task<bool> emailExists = context.Users.AnyAsync(u => u.Email == email.Value, cancellationToken);
-        Task<bool> usernameExists = context.Users.AnyAsync(u => u.UserName == userName, cancellationToken);
-
-        await Task.WhenAll(emailExists, usernameExists);
-
-        if (emailExists.Result)
+        // Check for existing email first
+        bool emailExists = await context.Users.AnyAsync(u => u.Email == email.Value, cancellationToken);
+        if (emailExists)
         {
             throw UserErrors.EmailAlreadyExists(email.Value);
         }
 
-        if (usernameExists.Result)
+        // Check for existing username second
+        bool usernameExists = await context.Users.AnyAsync(u => u.UserName == userName, cancellationToken);
+        if (usernameExists)
         {
             throw UserErrors.UsernameAlreadyExists(userName);
         }
