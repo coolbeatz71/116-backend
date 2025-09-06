@@ -77,4 +77,44 @@ public static class ValidationErrorMessage
     {
         return "Role description is required";
     }
+
+    /// <summary>
+    /// Error message indicating that the user account is already verified.
+    /// </summary>
+    public static string AccountAlreadyVerified()
+    {
+        return "Account is already verified";
+    }
+
+    /// <summary>
+    /// Error message indicating that no valid OTP was found for verification.
+    /// </summary>
+    public static string NoValidOtpFound()
+    {
+        return "No valid verification code found. Please request a new verification code";
+    }
+
+    /// <summary>
+    /// Error message indicating that the provided OTP code is invalid.
+    /// </summary>
+    public static string InvalidOtpCode()
+    {
+        return "Invalid verification code. Please check and try again";
+    }
+
+    /// <summary>
+    /// Error message indicating that the OTP has expired.
+    /// </summary>
+    public static string OtpExpired()
+    {
+        return "Verification code has expired. Please request a new verification code";
+    }
+
+    /// <summary>
+    /// Error message indicating that maximum OTP verification attempts have been reached.
+    /// </summary>
+    public static string MaxOtpAttemptsReached()
+    {
+        return "Maximum verification attempts reached. Please request a new verification code";
+    }
 }

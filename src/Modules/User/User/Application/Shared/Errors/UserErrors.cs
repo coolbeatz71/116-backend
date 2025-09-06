@@ -123,4 +123,34 @@ public static class UserErrors
     /// </summary>
     public static BadRequestException BadRequest(string message) =>
         new(message);
+
+    /// <summary>
+    /// Throws when user account is already verified.
+    /// </summary>
+    public static ConflictException AccountAlreadyVerified() =>
+        new(ValidationErrorMessage.AccountAlreadyVerified());
+
+    /// <summary>
+    /// Throws when no valid OTP is found for verification.
+    /// </summary>
+    public static NotFoundException NoValidOtpFound() =>
+        new(ValidationErrorMessage.NoValidOtpFound());
+
+    /// <summary>
+    /// Throws when OTP verification code is invalid.
+    /// </summary>
+    public static BadRequestException InvalidOtpCode() =>
+        new(ValidationErrorMessage.InvalidOtpCode());
+
+    /// <summary>
+    /// Throws when OTP has expired.
+    /// </summary>
+    public static AuthenticationException OtpExpired() =>
+        new(ValidationErrorMessage.OtpExpired());
+
+    /// <summary>
+    /// Throws when maximum OTP verification attempts are reached.
+    /// </summary>
+    public static AuthorizationException MaxOtpAttemptsReached() =>
+        new(ValidationErrorMessage.MaxOtpAttemptsReached());
 }

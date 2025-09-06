@@ -41,11 +41,16 @@ public interface IOtpRepository : IRepository<OtpEntity>
     /// <param name="code">The OTP code to validate.</param>
     /// <param name="purpose">The purpose of the OTP.</param>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
-    /// <returns>The valid OTP entity if found and valid; otherwise, null.</returns>
+    /// <returns>The valid OTP entity if validation succeeds.</returns>
+    /// <exception cref="NotFoundException">Thrown when no valid OTP is found.</exception>
+    /// <exception cref="BadRequestException">Thrown when OTP code is invalid.</exception>
+    /// <exception cref="AuthenticationException">Thrown when OTP is expired.</exception>
+    /// <exception cref="AuthorizationException">Thrown when max attempts are reached.</exception>
     /// <remarks>
-    /// This method finds an OTP that matches the code, user, and purpose, and is still valid.
+    /// This method finds an OTP that matches the code, user, and purpose, validates it,
+    /// and throws appropriate exceptions for different failure scenarios.
     /// </remarks>
-    Task<OtpEntity?> ValidateOtpAsync(Guid userId, string code, OtpPurpose purpose, CancellationToken cancellationToken = default);
+    Task<OtpEntity> ValidateOtpAsync(Guid userId, string code, OtpPurpose purpose, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Invalidates all existing OTPs for a user and specific purpose.
