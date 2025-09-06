@@ -39,12 +39,12 @@ public static class RouteConstants
             /// <summary>
             /// Route for public authentication (login, register).
             /// </summary>
-            public const string Auth = $"{Base}/auth";
+            public const string Auth = $"{Base}/public/auth";
 
             /// <summary>
             /// Route for accessing and updating user profiles.
             /// </summary>
-            public const string Profile = $"{Base}/profile";
+            public const string Profile = $"{Base}/public/profile";
         }
     }
 }

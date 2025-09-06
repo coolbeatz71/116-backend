@@ -1,10 +1,9 @@
 using Microsoft.Extensions.Logging;
 using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Shared.Services;
-using _116.User.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace _116.User.Infrastructure.Persistence.Seeds;
+namespace _116.User.Infrastructure.Persistence.Seeds.SuperAdmin;
 
 /// <summary>
 /// Orchestrator for Super Admin seeding operations.
@@ -22,11 +21,10 @@ public class SuperAdminSeeder : IDataSeeder
         IPasswordService passwordService,
         ILogger<SuperAdminSeeder> logger,
         ILogger<SuperAdminRepositoryManager> repositoryLogger,
-        ILogger<SuperAdminSeedingStrategy> strategyLogger)
+        ILogger<SuperAdminSeedingStrategy> strategyLogger
+    )
     {
         _logger = logger;
-
-        // Initialize dependencies using Dependency Injection principle
         _repositoryManager = new SuperAdminRepositoryManager(context, repositoryLogger);
 
         var entityFactory = new SuperAdminEntityFactory(passwordService);

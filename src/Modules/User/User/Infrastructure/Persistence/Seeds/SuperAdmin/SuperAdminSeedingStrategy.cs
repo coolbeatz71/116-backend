@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using _116.User.Domain.Entities;
 
-namespace _116.User.Infrastructure.Persistence.Seeds;
+namespace _116.User.Infrastructure.Persistence.Seeds.SuperAdmin;
 
 /// <summary>
 /// Implements the seeding strategy for Super Admin setup.

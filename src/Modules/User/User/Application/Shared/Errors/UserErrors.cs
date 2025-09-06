@@ -1,5 +1,6 @@
 using _116.Shared.Application.Exceptions;
 using _116.User.Application.Shared.Errors.Messages;
+using _116.User.Application.Shared.Exceptions;
 
 namespace _116.User.Application.Shared.Errors;
 
@@ -40,7 +41,7 @@ public static class UserErrors
         new("Role", roleId);
 
     /// <summary>
-    /// Throws when a role is not found by name.
+    /// Throws when a role is not found using the name.
     /// </summary>
     public static NotFoundException RoleNotFoundByName(string roleName) =>
         new("Role", "name", roleName);
@@ -54,13 +55,13 @@ public static class UserErrors
     /// <summary>
     /// Throws when the account is inactive.
     /// </summary>
-    public static AuthorizationException AccountInactive(string email) =>
+    public static AccountInactiveException AccountInactive(string email) =>
         new(AuthorizationErrorMessage.AccountInactive(email));
 
     /// <summary>
     /// Throws when the account is not verified.
     /// </summary>
-    public static AuthorizationException AccountNotVerified(string email) =>
+    public static AccountNotVerifiedException AccountNotVerified(string email) =>
         new(AuthorizationErrorMessage.AccountNotVerified(email));
 
     /// <summary>
@@ -122,4 +123,34 @@ public static class UserErrors
     /// </summary>
     public static BadRequestException BadRequest(string message) =>
         new(message);
+
+    /// <summary>
+    /// Throws when the user account is already verified.
+    /// </summary>
+    public static ConflictException AccountAlreadyVerified() =>
+        new(ValidationErrorMessage.AccountAlreadyVerified());
+
+    /// <summary>
+    /// Throws when no valid OTP is found for verification.
+    /// </summary>
+    public static NotFoundException NoValidOtpFound() =>
+        new(ValidationErrorMessage.NoValidOtpFound());
+
+    /// <summary>
+    /// Throws when OTP verification code is invalid.
+    /// </summary>
+    public static BadRequestException InvalidOtpCode() =>
+        new(ValidationErrorMessage.InvalidOtpCode());
+
+    /// <summary>
+    /// Throws when OTP has expired.
+    /// </summary>
+    public static AuthenticationException OtpExpired() =>
+        new(ValidationErrorMessage.OtpExpired());
+
+    /// <summary>
+    /// Throws when maximum OTP verification attempts are reached.
+    /// </summary>
+    public static AuthorizationException MaxOtpAttemptsReached() =>
+        new(ValidationErrorMessage.MaxOtpAttemptsReached());
 }

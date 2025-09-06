@@ -1,10 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using _116.User.Domain.Entities;
-using _116.User.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace _116.User.Infrastructure.Persistence.Seeds;
+namespace _116.User.Infrastructure.Persistence.Seeds.SuperAdmin;
 
 /// <summary>
 /// Manages database operations for Super Admin seeding.

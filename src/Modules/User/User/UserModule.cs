@@ -1,14 +1,18 @@
 using System.Text;
 using _116.Shared.Application.Configurations;
+using _116.Shared.Application.Exceptions.Handlers.Contracts;
 using _116.Shared.Infrastructure;
 using _116.Shared.Infrastructure.Seed;
 using _116.User.Application.Shared.Authorizations.Extensions;
+using _116.User.Application.Shared.Exceptions.Handlers;
 using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
 using _116.User.Infrastructure.Repositories;
 using _116.User.Infrastructure.Persistence;
 using _116.User.Infrastructure.Persistence.Seeds;
+using _116.User.Infrastructure.Persistence.Seeds.SuperAdmin;
+using _116.User.Infrastructure.Persistence.Seeds.Visitor;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,9 +68,12 @@ public static class UserModule
         services.AddScoped<IPasswordService, PasswordService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
+        services.AddScoped<IOtpService, OtpService>();
+        services.AddScoped<IOtpRepository, OtpRepository>();
 
         // Register data seeder for initial user data population
         services.AddScoped<IDataSeeder, SuperAdminSeeder>();
+        services.AddScoped<IDataSeeder, VisitorRoleSeeder>();
 
         // Configure JWT Authentication
         var (secret, issuer, audience, _) = AppEnvironment.Jwt();
@@ -87,6 +94,10 @@ public static class UserModule
 
         // Configure Authorization using centralized configuration
         services.AddUserModuleAuthorization();
+
+        // Register custom exception handlers for this module
+        services.AddSingleton<IExceptionStrategy, AccountInactiveExceptionHandler>();
+        services.AddSingleton<IExceptionStrategy, AccountNotVerifiedExceptionHandler>();
 
         return services;
     }

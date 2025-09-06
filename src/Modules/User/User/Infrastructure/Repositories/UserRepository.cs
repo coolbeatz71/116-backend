@@ -75,15 +75,126 @@ public class UserRepository(UserDbContext context) : IUserRepository
             );
 
         // Check if the account is active
-        if (!user.IsActive) throw UserErrors.AccountInactive(email.Value);
+        IsUserAccountActive(user);
 
         // Validate admin privileges
         bool hasAdminRole = user.UserRoles
             .Any(ur => ur.Role.Name is nameof(CoreUserRole.Admin) or nameof(CoreUserRole.SuperAdmin));
 
-        if (!hasAdminRole) throw UserErrors.InvalidCredentials();
+        if (!hasAdminRole)
+        {
+            throw UserErrors.InvalidCredentials();
+        }
 
         return user;
+    }
+
+    /// <inheritdoc />
+    public async Task<UserEntity> GetPublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default)
+    {
+        // Check if credentials is an email (contains @ and .) or username
+        bool isEmail = credentials.Contains('@') && credentials.Contains('.');
+
+        // Get the user by email or username without any status checks
+        return await context.Users
+            .Where(u => isEmail ? u.Email == credentials : u.UserName == credentials)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
+            .FirstDefaultOrThrowAsync(
+                keyName: "credentials",
+                keyValue: credentials,
+                cancellationToken: cancellationToken
+            );
+    }
+
+    /// <inheritdoc />
+    public bool IsUserAccountActive(UserEntity user)
+    {
+        if (!user.IsActive)
+        {
+            throw UserErrors.AccountInactive(user.Email!);
+        }
+        return true;
+    }
+
+    /// <inheritdoc />
+    public bool IsUserAccountVerified(UserEntity user)
+    {
+        if (user is { AuthProvider: AuthProvider.Local, IsVerified: false })
+        {
+            throw UserErrors.AccountNotVerified(user.Email!);
+        }
+        return true;
+    }
+
+    /// <inheritdoc />
+    public async Task<UserEntity> GetActivePublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default)
+    {
+        // Check if credentials is an email (contains @ and .) or username
+        bool isEmail = credentials.Contains('@') && credentials.Contains('.');
+
+        // Get the user by email or username without filtering by IsActive to provide specific error messages
+        UserEntity user = await context.Users
+            .Where(u => isEmail ? u.Email == credentials : u.UserName == credentials)
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                    .ThenInclude(r => r.RolePermissions)
+                        .ThenInclude(rp => rp.Permission)
+            .FirstDefaultOrThrowAsync(
+                keyName: "credentials",
+                keyValue: credentials,
+                cancellationToken: cancellationToken
+            );
+
+        // Check if the account is active
+        IsUserAccountActive(user);
+
+        // Check if the account is verified (for local auth)
+        IsUserAccountVerified(user);
+
+        return user;
+    }
+
+    /// <inheritdoc />
+    public async Task ValidateUniqueCredentialsAsync(Email email, string userName, CancellationToken cancellationToken = default)
+    {
+        // Check for existing email first
+        bool emailExists = await context.Users.AnyAsync(u => u.Email == email.Value, cancellationToken);
+        if (emailExists)
+        {
+            throw UserErrors.EmailAlreadyExists(email.Value);
+        }
+
+        // Check for existing username second
+        bool usernameExists = await context.Users.AnyAsync(u => u.UserName == userName, cancellationToken);
+        if (usernameExists)
+        {
+            throw UserErrors.UsernameAlreadyExists(userName);
+        }
+    }
+
+    /// <inheritdoc />
+    public async Task AssignVisitorRoleAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        // Find the user
+        UserEntity? user = await context.Users.FindAsync([userId], cancellationToken);
+
+        // Find the Visitor role
+        RoleEntity? visitorRole = await context.Roles
+            .FirstOrDefaultAsync(r => r.Name == nameof(CoreUserRole.Visitor), cancellationToken);
+
+        if (visitorRole == null)
+        {
+            throw UserErrors.RoleNotFoundByName(nameof(CoreUserRole.Visitor));
+        }
+
+        // Create user-role association using the static factory method
+        var userRole = UserRoleEntity.Create(Guid.NewGuid(), userId, visitorRole.Id);
+
+        // Use the domain method to assign the role
+        user?.AssignRole(userRole);
     }
 
     /// <inheritdoc />

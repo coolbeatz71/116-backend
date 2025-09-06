@@ -70,6 +70,12 @@ public static class ApplicationBuilderExtension
     {
         using IServiceScope scope = serviceProvider.CreateScope();
         IEnumerable<IDataSeeder> seeders = scope.ServiceProvider.GetServices<IDataSeeder>();
-        await Task.WhenAll(seeders.Select(seeder => seeder.SeedAllAsync()));
+
+        // Executes all IDataSeeder in sequence, ensuring safe seeding
+        // without concurrent DbContext access issues.
+        foreach (IDataSeeder seeder in seeders)
+        {
+            await seeder.SeedAllAsync();
+        }
     }
 }

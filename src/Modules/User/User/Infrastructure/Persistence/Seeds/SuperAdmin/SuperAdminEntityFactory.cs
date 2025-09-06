@@ -1,7 +1,7 @@
 using _116.User.Application.Shared.Services;
 using _116.User.Domain.Entities;
 
-namespace _116.User.Infrastructure.Persistence.Seeds;
+namespace _116.User.Infrastructure.Persistence.Seeds.SuperAdmin;
 
 /// <summary>
 /// Factory class for creating Super Admin related entities.

@@ -6,9 +6,19 @@ namespace _116.BuildingBlocks.Constants;
 public static class UserConstants
 {
     /// <summary>
+    /// Minimum allowed length for the username.
+    /// </summary>
+    public const int MinUserNameLength = 3;
+
+    /// <summary>
     /// Maximum allowed length for username.
     /// </summary>
     public const int MaxUserNameLength = 20;
+
+    /// <summary>
+    /// Minimum allowed length for the password.
+    /// </summary>
+    public const int MinPasswordLength = 6;
 
     /// <summary>
     /// Default verification status for new local authentication users.
@@ -91,4 +101,19 @@ public static class UserConstants
     /// Maximum allowed length for full phone numbers.
     /// </summary>
     public const int MaxFullPhoneNumberLength = 20;
+
+    /// <summary>
+    /// OTP expiration time in minutes.
+    /// </summary>
+    public const int OtpExpirationMinutes = 60;
+
+    /// <summary>
+    /// Maximum number of OTP verification attempts.
+    /// </summary>
+    public const int MaxOtpAttempts = 3;
+
+    /// <summary>
+    /// Length of generated OTP codes.
+    /// </summary>
+    public const int OtpCodeLength = 6;
 }

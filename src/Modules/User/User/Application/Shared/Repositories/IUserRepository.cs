@@ -40,7 +40,7 @@ public interface IUserRepository : IRepository<UserEntity>
     /// </summary>
     /// <param name="email">The email address to check for existence.</param>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
-    /// <returns>True if a user exists with the email; otherwise, false.</returns>
+    /// <returns>True if a user exists with the email, otherwise, false.</returns>
     /// <remarks>
     /// This method is useful for email uniqueness validation during user registration.
     /// </remarks>
@@ -51,11 +51,38 @@ public interface IUserRepository : IRepository<UserEntity>
     /// </summary>
     /// <param name="userName">The username to check for existence.</param>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
-    /// <returns>True if a user exists with the username; otherwise, false.</returns>
+    /// <returns>True if a user exists with the username, otherwise, false.</returns>
     /// <remarks>
     /// This method is useful for username uniqueness validation during user registration.
     /// </remarks>
     Task<bool> ExistsByUserNameAsync(string userName, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Validates that both email and username are unique for user registration.
+    /// </summary>
+    /// <param name="email">The email address to check for uniqueness.</param>
+    /// <param name="userName">The username to check for uniqueness.</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous validation operation.</returns>
+    /// <exception cref="ConflictException">Thrown when email or username already exists.</exception>
+    /// <remarks>
+    /// This method performs both email and username uniqueness validation in a single database operation.
+    /// It throws specific conflict exceptions for email or username conflicts.
+    /// </remarks>
+    Task ValidateUniqueCredentialsAsync(Email email, string userName, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Assigns the Visitor role to a new user during registration.
+    /// </summary>
+    /// <param name="userId">The unique identifier of the user.</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    /// <exception cref="NotFoundException">Thrown when the Visitor role is not found in the system.</exception>
+    /// <remarks>
+    /// This method automatically assigns the default Visitor role to new users.
+    /// Should be called as part of the user registration process.
+    /// </remarks>
+    Task AssignVisitorRoleAsync(Guid userId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new user entity to the repository.
@@ -87,15 +114,72 @@ public interface IUserRepository : IRepository<UserEntity>
     /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
     /// <returns>The admin user entity with roles and permissions loaded.</returns>
     /// <exception cref="NotFoundException">Thrown when no user is found with the specified email.</exception>
-    /// <exception cref="AuthorizationException">Thrown when user account is inactive (HTTP 403 Forbidden).</exception>
-    /// <exception cref="AuthenticationException">Thrown when user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthenticationException">Thrown when the user lacks administrative privileges (HTTP 401 Unauthorized).</exception>
     /// <remarks>
     /// This method specifically validates admin privileges and account status with proper HTTP status mapping:
-    /// - AuthorizationException: User exists but account is inactive (403 Forbidden)
+    /// - AuthorizationException: User exists but the account is inactive (403 Forbidden)
     /// - AuthenticationException: User lacks Admin or SuperAdmin role (401 Unauthorized)
     /// Use this for admin authentication scenarios to ensure proper error handling.
     /// </remarks>
     Task<UserEntity> GetActiveAdminUserWithRolesAndPermissionsAsync(Email email, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves a public user with roles and permissions by credentials (email or username).
+    /// Only validates that the user exists - does not check verification or account status.
+    /// </summary>
+    /// <param name="credentials">The credentials to search for (email or username).</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>The public user entity with roles and permissions loaded.</returns>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified credentials.</exception>
+    /// <remarks>
+    /// This method accepts either email address or username as credentials.
+    /// It does not perform account status or verification checks - use this when you need to
+    /// validate credentials first before checking account status.
+    /// </remarks>
+    Task<UserEntity> GetPublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Validates that a user account is active.
+    /// </summary>
+    /// <param name="user">The user entity to validate.</param>
+    /// <returns>True if the account is active, otherwise throws an exception.</returns>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method should be called after password verification to ensure account status
+    /// is only revealed for valid credentials.
+    /// </remarks>
+    bool IsUserAccountActive(UserEntity user);
+
+    /// <summary>
+    /// Validates that a user account is verified for local authentication.
+    /// </summary>
+    /// <param name="user">The user entity to validate.</param>
+    /// <returns>True if the account is verified or not using local auth, otherwise throws an exception.</returns>
+    /// <exception cref="AuthorizationException">Thrown when the local account is not verified (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method should be called after password verification to ensure verification status
+    /// is only revealed for valid credentials. Only applies to local authentication provider.
+    /// </remarks>
+    bool IsUserAccountVerified(UserEntity user);
+
+    /// <summary>
+    /// Retrieves an active public user with roles and permissions by credentials (email or username).
+    /// Validates that the user exists and is active for public authentication.
+    /// </summary>
+    /// <param name="credentials">The credentials to search for (email or username).</param>
+    /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+    /// <returns>The public user entity with roles and permissions loaded.</returns>
+    /// <exception cref="NotFoundException">Thrown when no user is found with the specified credentials.</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is inactive (HTTP 403 Forbidden).</exception>
+    /// <exception cref="AuthorizationException">Thrown when the user account is not verified (HTTP 403 Forbidden).</exception>
+    /// <remarks>
+    /// This method accepts either email address or username as credentials for public user authentication.
+    /// It validates account status with proper HTTP status mapping:
+    /// - AuthorizationException: User exists, but the account is inactive or not verified (403 Forbidden)
+    /// Use this for public user authentication scenarios to ensure proper error handling.
+    /// </remarks>
+    Task<UserEntity> GetActivePublicUserWithRolesAndPermissionsAsync(string credentials, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Persists all pending changes in the repository to the database.

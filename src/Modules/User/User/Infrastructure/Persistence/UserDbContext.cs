@@ -46,6 +46,12 @@ public class UserDbContext(DbContextOptions<UserDbContext> options) : DbContext(
     public DbSet<RolePermissionEntity> RolePermissions => Set<RolePermissionEntity>();
 
     /// <summary>
+    /// Gets the collection of OTP entities representing one-time passwords for user verification.
+    /// </summary>
+    /// <value>DbSet of OtpEntity for managing OTP codes and verification</value>
+    public DbSet<OtpEntity> Otps => Set<OtpEntity>();
+
+    /// <summary>
     /// Configures the model for the context using Fluent API.
     /// </summary>
     /// <param name="modelBuilder">The builder used to construct the model for the context.</param>
