@@ -59,12 +59,12 @@ public class UserEntity : Aggregate<Guid>
     /// <summary>
     /// Indicates whether the user account is currently active.
     /// </summary>
-    public bool IsActive { get; private set; }
+    public bool IsActive { get; private set; } = UserConstants.DefaultIsActive;
 
     /// <summary>
     /// Indicates whether the user is currently logged in.
     /// </summary>
-    public bool IsLoggedIn { get; private set; }
+    public bool IsLoggedIn { get; private set; } = UserConstants.DefaultIsLoggedIn;
 
     /// <summary>
     /// Date and time of the user's last login, in UTC.
