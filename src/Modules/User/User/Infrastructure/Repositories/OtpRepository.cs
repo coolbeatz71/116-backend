@@ -19,37 +19,70 @@ public class OtpRepository(UserDbContext context) : IOtpRepository
     }
 
     /// <inheritdoc />
-    public async Task<OtpEntity?> GetLatestValidOtpAsync(Guid userId, OtpPurpose purpose, CancellationToken cancellationToken = default)
+    public async Task<OtpEntity?> GetLatestValidOtpAsync(
+        Guid userId,
+        OtpPurpose purpose,
+        CancellationToken cancellationToken = default
+    )
     {
         return await context.Otps
             .Where(o => o.UserId == userId
                         && o.Purpose == purpose
-                        && !o.IsUsed
+                        && o.IsUsed == false
                         && o.ExpiresAt > DateTime.UtcNow
-                        && o.AttemptCount < BuildingBlocks.Constants.UserConstants.MaxOtpAttempts)
+            )
             .OrderByDescending(o => o.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public async Task<OtpEntity> ValidateOtpAsync(Guid userId, string code, OtpPurpose purpose, CancellationToken cancellationToken = default)
+    public async Task<OtpEntity> ValidateOtpAsync(
+        Guid userId,
+        string code,
+        OtpPurpose purpose,
+        CancellationToken cancellationToken = default
+    )
     {
-        // First, try to find the exact OTP with the provided code
+        // Try to find the OTP with the provided code
         OtpEntity? matchingOtp = await context.Otps
             .Where(o => o.UserId == userId
                         && o.Code == code
                         && o.Purpose == purpose
-                        && !o.IsUsed
+                        && o.IsUsed == false
             )
             .OrderByDescending(o => o.CreatedAt)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (matchingOtp != null && matchingOtp.IsValid())
+        if (matchingOtp != null)
         {
-            return matchingOtp;
+            // First check if the otp is not expired
+            if (matchingOtp.IsExpired())
+            {
+                throw UserErrors.OtpExpired();
+            }
+
+            // Then check if the max attempts are not reached
+            if (matchingOtp.HasMaxAttemptsReached())
+            {
+                throw UserErrors.MaxOtpAttemptsReached();
+            }
+
+            // Then check if the otp is valid for the user
+            if (matchingOtp.IsValid())
+            {
+                return matchingOtp;
+            }
+
+            // Now increment the attempt count
+            matchingOtp.IncrementAttemptCount();
+            await UpdateAsync(matchingOtp, cancellationToken);
+
+            if (matchingOtp.HasMaxAttemptsReached()) throw UserErrors.MaxOtpAttemptsReached();
+
+            throw UserErrors.InvalidOtpCode();
         }
 
-        // If no matching OTP found, check for any valid OTP to provide the specific error
+        // No matching OTP found — check the latest valid OTP for this purpose
         OtpEntity? latestOtp = await GetLatestValidOtpAsync(userId, purpose, cancellationToken);
 
         if (latestOtp == null)
@@ -57,11 +90,6 @@ public class OtpRepository(UserDbContext context) : IOtpRepository
             throw UserErrors.NoValidOtpFound();
         }
 
-        // Increment attempt count for failed verification
-        latestOtp.IncrementAttemptCount();
-        await UpdateAsync(latestOtp, cancellationToken);
-
-        // Check specific failure reasons
         if (latestOtp.HasMaxAttemptsReached())
         {
             throw UserErrors.MaxOtpAttemptsReached();
@@ -72,12 +100,25 @@ public class OtpRepository(UserDbContext context) : IOtpRepository
             throw UserErrors.OtpExpired();
         }
 
-        // Invalid code
+        // Increment attempts for wrong code
+        latestOtp.IncrementAttemptCount();
+        await UpdateAsync(latestOtp, cancellationToken);
+
+        if (latestOtp.HasMaxAttemptsReached())
+        {
+            throw UserErrors.MaxOtpAttemptsReached();
+        }
+
         throw UserErrors.InvalidOtpCode();
     }
 
+
     /// <inheritdoc />
-    public async Task InvalidateExistingOtpsAsync(Guid userId, OtpPurpose purpose, CancellationToken cancellationToken = default)
+    public async Task InvalidateExistingOtpsAsync(
+        Guid userId,
+        OtpPurpose purpose,
+        CancellationToken cancellationToken = default
+    )
     {
         List<OtpEntity> expiredOtpList = await context.Otps
             .Where(o => o.UserId == userId && o.Purpose == purpose && !o.IsUsed)
