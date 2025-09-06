@@ -4,6 +4,7 @@ using _116.User.Application.Shared.Mappers;
 using _116.User.Application.Shared.Repositories;
 using _116.User.Application.Shared.Services;
 using _116.User.Domain.Entities;
+using _116.User.Domain.Enums;
 using _116.User.Domain.Results;
 using _116.User.Domain.ValueObjects;
 
@@ -14,12 +15,16 @@ namespace _116.User.Application.Public.UseCases.Commands.SignUp;
 /// </summary>
 /// <param name="userRepository">Repository for user data access operations.</param>
 /// <param name="roleRepository">Repository for role and permission data operations.</param>
+/// <param name="otpRepository">Repository for OTP data access operations.</param>
 /// <param name="passwordService">Service for hashing passwords.</param>
+/// <param name="otpService">Service for generating OTP codes.</param>
 /// <param name="jwtService">Service for generating JWT tokens with user claims.</param>
 public class PublicSignUpHandler(
     IUserRepository userRepository,
     IRoleRepository roleRepository,
+    IOtpRepository otpRepository,
     IPasswordService passwordService,
+    IOtpService otpService,
     IJwtService jwtService
 ) : ICommandHandler<PublicSignUpCommand, PublicSignUpResult>
 {
@@ -55,7 +60,12 @@ public class PublicSignUpHandler(
         // Assign the visitor role to the new user
         await userRepository.AssignVisitorRoleAsync(newUser.Id, cancellationToken);
 
-        // Save all changes
+        // Generate OTP for email verification
+        OtpEntity verificationOtp = otpService.CreateOtp(newUser.Id, OtpPurpose.EmailVerification);
+        await otpRepository.AddAsync(verificationOtp, cancellationToken);
+
+        // Save all changes atomically in a single transaction
+        // (user creation, visitor role assignment, and OTP generation) succeed or fail together
         await userRepository.SaveChangesAsync(cancellationToken);
 
         // Get the newly created user with roles to generate token
